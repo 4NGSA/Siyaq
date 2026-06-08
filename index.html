@@ -940,8 +940,9 @@ async function addInt() {
   const date = document.getElementById('f-date').value
   if (!name || !phone || !summary || !date) return
 
-  let { data: existing } = await sb.from('customers')
+  let { data: existing, error: findError } = await sb.from('customers')
     .select('*').eq('phone', phone).maybeSingle()
+console.log('existing:', existing, 'findError:', findError)
 
   let customerId
   if (!existing) {
