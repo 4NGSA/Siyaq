@@ -870,9 +870,54 @@ function openReport(id) {
   document.getElementById('rp-body').innerHTML = `<div class="gen-state"><div class="spin"></div><div class="gen-txt">جاري تحليل ملف العميل...</div><div class="gen-steps"><div class="gs" id="gs1"><div class="gs-dot"></div>مراجعة التفاعلات السابقة</div><div class="gs" id="gs2"><div class="gs-dot"></div>تحديد المشكلات المفتوحة</div><div class="gs" id="gs3"><div class="gs-dot"></div>التنبؤ بسبب التواصل الحالي</div><div class="gs" id="gs4"><div class="gs-dot"></div>إعداد التوصيات</div></div></div>`;
   document.getElementById('backdrop').classList.add('show');
   ['gs1','gs2','gs3','gs4'].forEach((id,i) => setTimeout(() => { const el=document.getElementById(id); if(el) el.classList.add('done'); }, 600+i*600));
+  if (curCust.report) {
+  setTimeout(() => renderSavedReport(curCust), 3200);
+} else {
   setTimeout(() => renderReport(curCust), 3200);
 }
+}
 
+function renderSavedReport(c) {
+  const r = JSON.parse(c.report);
+  const unresolved = c.ints.filter(i => (i.st||i.status) === 'unresolved');
+  document.getElementById('rp-body').innerHTML = `
+    <div class="rp-sec">
+      <div class="rp-sec-lbl"><div class="sdot" style="background:#4F8EF7"></div>ملخص رحلة العميل</div>
+      <div class="rp-txt">${r.sum}</div>
+    </div>
+    <div class="rp-sec">
+      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--amber)"></div>المشكلات المفتوحة</div>
+      ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot"></div><span>${i.sum||i.summary}</span></div>`).join('') : '<div style="font-size:13px;color:var(--text3)">لا توجد مشكلات مفتوحة.</div>'}
+    </div>
+    <div class="rp-sec">
+      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--violet)"></div>التنبؤ بسبب التواصل الحالي</div>
+      <div class="rp-txt">${r.pred}</div>
+    </div>
+    <div class="rp-sec">
+      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--blue)"></div>التوصيات المقترحة</div>
+      ${r.sugs.map((s,i) => `<div class="sug-item"><div class="sug-num">${i+1}</div><span>${s}</span></div>`).join('')}
+    </div>
+    <div class="rp-sec">
+      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--text3)"></div>سجل التفاعلات</div>
+      <div class="tl">
+        ${c.ints.map(it => `
+          <div class="tl-item">
+            <div class="tl-l">
+              <div class="tl-ico" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
+              </div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-c">
+              <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:500">${chLabel(it.ch||it.channel)}</span><span>${it.date}</span></div>
+              <div class="tl-txt">${it.sum||it.summary}</div>
+              <div class="tl-bdg"><span class="badge ${(it.st||it.status)==='unresolved'?'b-amber':'b-green'}">${(it.st||it.status)==='unresolved'?'غير محلولة':'محلولة'}</span></div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+  
 async function renderReport(c) {
   const interactionsText = c.ints.map((i, idx) =>
     `${idx+1}. القناة: ${chLabel(i.ch||i.channel)} | التاريخ: ${i.date} | الحالة: ${(i.st||i.status)==='unresolved'?'غير محلولة':'محلولة'} | الملخص: ${i.sum||i.summary}`
@@ -966,7 +1011,9 @@ ${interactionsText}
             </div>`).join('')}
         </div>
       </div>`;
-
+await sb.from('customers')
+      .update({ report: JSON.stringify({sum, pred, sugs}), report_updated_at: new Date().toISOString() })
+      .eq('id', c.id)
   } catch(e) {
     document.getElementById('rp-body').innerHTML = '<div style="padding:20px;font-size:13px;color:var(--text3)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>';
   }
@@ -1015,6 +1062,10 @@ async function addInt() {
     email: selCh === 'email' ? document.getElementById('f-email').value : null
   }])
 
+  await sb.from('customers')
+    .update({ report: null })
+    .eq('id', customerId)
+  
   const tst = document.getElementById('tst')
   tst.classList.add('show')
   setTimeout(() => tst.classList.remove('show'), 2800)
