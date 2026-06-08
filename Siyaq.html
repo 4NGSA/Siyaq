@@ -693,7 +693,16 @@ textarea.fi{resize:vertical;min-height:78px}
   </div>
 </div>
 
+  
+                                                                                <!--This is the Backend Part of the code-->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://nidysxhagcfzjfdodsux.supabase.co'
+const SUPABASE_KEY = 'eyJhbGci...'
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+
+  
 const cur = document.getElementById('cur');
 document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
 document.querySelectorAll('button,.ccard').forEach(el => {
