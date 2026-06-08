@@ -700,7 +700,7 @@ textarea.fi{resize:vertical;min-height:78px}
 const SUPABASE_URL = 'https://nidysxhagcfzjfdodsux.supabase.co'
 const SUPABASE_KEY = 'eyJhbGci...'
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-
+                                                                              //End of backend part connecting to supabase
 
   
 const cur = document.getElementById('cur');
@@ -713,32 +713,7 @@ document.querySelectorAll('button,.ccard').forEach(el => {
 const CH_COLORS = { phone:'#4F8EF7', whatsapp:'#2DD4A0', branch:'#A78BFA', twitter:'#38BDF8', email:'#F5A623' };
 const CH_LABELS = { phone:'هاتف', whatsapp:'واتساب', branch:'فرع', twitter:'تويتر', email:'بريد' };
 
-const DB = [
-  {
-    id:'C001', name:'أحمد الزهراني', phone:'0512345678', init:'أح',
-    ints:[
-      {ch:'phone', date:'2026-05-01', sum:'اتصل للإبلاغ عن خطأ في فاتورة أبريل. تم تصعيد الطلب لفريق الفواتير.', st:'unresolved'},
-      {ch:'whatsapp', date:'2026-05-05', sum:'تواصل عبر واتساب لمتابعة مشكلة الفاتورة. لم يتلق أي رد.', st:'unresolved'},
-      {ch:'branch', date:'2026-05-10', sum:'زار فرع العليا. طُلب منه الانتظار 48 ساعة.', st:'unresolved'},
-      {ch:'phone', date:'2026-05-14', sum:'اتصل مجدداً. لا يزال بدون حل. مستوى الإحباط مرتفع.', st:'unresolved'},
-    ]
-  },
-  {
-    id:'C002', name:'نورا العتيبي', phone:'0551234567', init:'نو',
-    ints:[
-      {ch:'twitter', date:'2026-05-08', sum:'نشرت تغريدة عن بطء الإنترنت في المنزل. طُلب منها التواصل برسالة مباشرة.', st:'resolved'},
-      {ch:'phone', date:'2026-05-09', sum:'اتصلت وتم جدولة زيارة فني.', st:'resolved'},
-      {ch:'phone', date:'2026-05-20', sum:'اتصلت مجدداً. عادت مشكلة البطء بعد زيارة الفني.', st:'unresolved'},
-    ]
-  },
-  {
-    id:'C003', name:'خالد الغامدي', phone:'0598765432', init:'خا',
-    ints:[
-      {ch:'whatsapp', date:'2026-05-12', sum:'سأل عن ترقية الباقة من 100 إلى 500 ميجابايت. أُرسل له رابط التفعيل.', st:'resolved'},
-      {ch:'phone', date:'2026-05-18', sum:'اتصل للتأكد من الترقية لكن الفاتورة لا تزال تظهر سعر الباقة القديمة.', st:'unresolved'},
-    ]
-  }
-];
+let DB = [];
 
 const REPORTS = {
   C001:{
@@ -954,26 +929,40 @@ function setSt(s) {
   document.getElementById('st-r').className = 'stbtn' + (s==='resolved' ? ' sel-r' : '');
 }
 
-function addInt() {
-  const name = document.getElementById('f-name').value.trim();
-  const phone = document.getElementById('f-phone').value.trim();
-  const sum = document.getElementById('f-summary').value.trim();
-  const date = document.getElementById('f-date').value;
-  if (!name || !phone || !sum || !date) return;
-  let cust = DB.find(c => c.phone === phone);
-  if (!cust) {
-    const init = name.slice(0,2);
-    cust = { id:'C00'+(DB.length+1), name, phone, init, ints:[] };
-    DB.push(cust);
+async function addInt() {
+  const name = document.getElementById('f-name').value.trim()
+  const phone = document.getElementById('f-phone').value.trim()
+  const summary = document.getElementById('f-summary').value.trim()
+  const date = document.getElementById('f-date').value
+  if (!name || !phone || !summary || !date) return
+
+  let { data: existing } = await sb.from('customers')
+    .select('*').eq('phone', phone).maybeSingle()
+
+  let customerId
+  if (!existing) {
+    const { data: newCust } = await sb.from('customers')
+      .insert({ name, phone, init: name.slice(0,2) })
+      .select().single()
+    customerId = newCust.id
+  } else {
+    customerId = existing.id
   }
-  cust.ints.push({ ch:selCh, date, sum, st:selSt });
-  const tst = document.getElementById('tst');
-  tst.classList.add('show');
-  setTimeout(() => tst.classList.remove('show'), 2800);
-  updateRecent(name, selCh, date);
-  clearForm();
-  updateStats();
-  renderList(DB);
+
+  await sb.from('interactions').insert({
+    customer_id: customerId,
+    channel: selCh,
+    date,
+    summary,
+    status: selSt,
+    email: selCh === 'email' ? document.getElementById('f-email').value : null
+  })
+
+  const tst = document.getElementById('tst')
+  tst.classList.add('show')
+  setTimeout(() => tst.classList.remove('show'), 2800)
+  clearForm()
+  loadCustomers()
 }
 
 function updateRecent(name, ch, date) {
@@ -1009,8 +998,20 @@ function rebindCursor() {
 }
 
 document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-updateStats();
-renderList(DB);
+
+            //asks supabase for customers, interactions then links them together and updates the stats with the real data
+async function loadCustomers() {
+  const { data: customers } = await sb.from('customers').select('*')
+  const { data: interactions } = await sb.from('interactions').select('*')
+  DB = (customers || []).map(c => ({
+    ...c,
+    ints: (interactions || []).filter(i => i.customer_id === c.id)
+  }))
+  updateStats();
+  renderList(DB);
+}
+loadCustomers();
+  
 </script>
 </body>
 </html>
