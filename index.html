@@ -777,9 +777,9 @@ function renderList(list) {
   document.getElementById('list-cnt').textContent = list.length + ' سجلات';
   if (!list.length) { el.innerHTML = '<div class="empty">لا توجد نتائج.</div>'; return; }
   el.innerHTML = list.map(c => {
-    const unres = c.ints.filter(i => i.st === 'unresolved').length;
+    const unres = c.ints.filter(i => (i.st||i.status) === 'unresolved').length;
     const last = c.ints[c.ints.length-1];
-    const channels = [...new Set(c.ints.map(i => i.ch))];
+    const channels = [...new Set(c.ints.map(i => i.ch||i.channel))];
     return `<div class="ccard" onclick="openReport('${c.id}')">
       <div class="av">${c.init}</div>
       <div>
@@ -843,6 +843,7 @@ function filterList() {
 
 function updateStats() {
   const tot = DB.length;
+  const allInts = DB.flatMap(c => c.ints);
   const unres = allInts.filter(i => (i.st || i.status) === 'unresolved').length;
   const res = allInts.filter(i => (i.st || i.status) === 'resolved').length;
   document.getElementById('s-tot').textContent = tot;
