@@ -1016,8 +1016,6 @@ function rebindCursor() {
   });
 }
 
-document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-
             //asks supabase for customers, interactions then links them together and updates the stats with the real data
 async function loadCustomers() {
   const { data: customers } = await sb.from('customers').select('*')
@@ -1029,6 +1027,8 @@ async function loadCustomers() {
   updateStats();
   renderList(DB);
 }
+
+document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
 loadCustomers();
   
 </script>
