@@ -819,8 +819,12 @@ function arToLatin(s) {
   return s.split('').map(c => map[c] || c).join('').toLowerCase();
 }
 function filterList() {
-  const raw = document.getElementById('search-in').value.trim();
-  if (!raw) { renderList(DB); return; }
+  if (!DB.length) return;
+   const raw = document.getElementById('search-in').value.trim();
+  if (!raw) { 
+    renderList(DB); 
+    return; 
+  }
   const q = normalizeAr(raw).toLowerCase();
   const qLat = raw.toLowerCase();
   renderList(DB.filter(c => {
