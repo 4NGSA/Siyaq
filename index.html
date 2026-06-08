@@ -971,22 +971,6 @@ async function addInt() {
   loadCustomers()
 }
 
-  await sb.from('interactions').insert({
-    customer_id: customerId,
-    channel: selCh,
-    date,
-    summary,
-    status: selSt,
-    email: selCh === 'email' ? document.getElementById('f-email').value : null
-  })
-
-  const tst = document.getElementById('tst')
-  tst.classList.add('show')
-  setTimeout(() => tst.classList.remove('show'), 2800)
-  clearForm()
-  loadCustomers()
-}
-
 function updateRecent(name, ch, date) {
   const el = document.getElementById('rec-list');
   const init = name.slice(0,2);
