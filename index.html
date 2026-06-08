@@ -945,10 +945,11 @@ async function addInt() {
 
   let customerId
   if (!existing) {
-    const { data: newCust } = await sb.from('customers')
-      .insert({ name, phone, init: name.slice(0,2) })
-      .select().single()
-    customerId = newCust.id
+    const { data: newCust, error } = await sb.from('customers')
+  .insert({ name, phone, init: name.slice(0,2) })
+  .select().single()
+if (error) { console.log('insert error:', error); return; }
+customerId = newCust.id
   } else {
     customerId = existing.id
   }
