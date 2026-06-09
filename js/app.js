@@ -702,7 +702,7 @@ function writeCachedCustomers(records) {
     window.localStorage.setItem(CUSTOMERS_CACHE_KEY, raw);
     return raw;
   } catch {
-    // Quota exceeded — usually large AI reports. Retry without them; the list and
+    // Quota exceeded - usually large AI reports. Retry without them; the list and
     // stats don't need reports, and the report panel refetches on demand.
     try {
       const lean = records.map(({ report, report_updated_at, ...rest }) => rest);
@@ -782,7 +782,7 @@ function relativeDay(dateStr) {
 
 // Builds the reasoning lines from real customer signals. Every interpolated
 // value is a number or an app-constant string (channel labels, sentiment
-// moods), so the markup is trusted — no user-controlled text is injected.
+// moods), so the markup is trusted - no user-controlled text is injected.
 function reasoningLines(customer) {
   const ints = customer.ints || [];
   const total = ints.length;
@@ -802,7 +802,7 @@ function reasoningLines(customer) {
   lines.push(
     unresolved
       ? `<span class="hot">${unresolved}</span> ${unresolved === 1 ? 'مشكلة' : 'مشكلات'} ما زالت دون حل`
-      : 'لا مشكلات مفتوحة — تواصل روتيني',
+      : 'لا مشكلات مفتوحة - تواصل روتيني',
   );
   lines.push('أربط الأنماط لأتوقّع سبب التواصل');
   lines.push('أُجهّز التوصيات المناسبة');
@@ -1401,7 +1401,7 @@ function showAddError(message) {
   showConfirmation('tst-err', 4_000);
 }
 
-// Success no longer paints a box — it announces to screen readers only; the
+// Success no longer paints a box - it announces to screen readers only; the
 // button state machine and the settling recent row carry the visual confirmation.
 function announceStatus(message) {
   const text = document.querySelector('#tst .tst-text');
@@ -1435,7 +1435,7 @@ function updateRecent(name, channel, date, { pending = false } = {}) {
 
   const item = document.createElement('div');
   item.className = pending ? 'rec-item pending' : 'rec-item';
-  item.innerHTML = `<div class="rec-av" aria-hidden="true">${escapeHtml(name.slice(0, 2))}</div><div><div class="rec-name">${escapeHtml(name)}</div><div class="rec-meta">${escapeHtml(channelLabel(channel))} — ${escapeHtml(date)}</div></div>`;
+  item.innerHTML = `<div class="rec-av" aria-hidden="true">${escapeHtml(name.slice(0, 2))}</div><div><div class="rec-name">${escapeHtml(name)}</div><div class="rec-meta">${escapeHtml(channelLabel(channel))} - ${escapeHtml(date)}</div></div>`;
   list.prepend(item);
   while (list.children.length > 5) list.lastChild.remove();
   return item;
@@ -1541,7 +1541,7 @@ async function addInteraction() {
       console.error('Report invalidation failed', result.reportInvalidationError);
     }
 
-    // Reconcile the directory in the background — the confirmation no longer waits on a full reload.
+    // Reconcile the directory in the background - the confirmation no longer waits on a full reload.
     loadCustomers().catch((reloadError) => {
       console.error(reloadError);
       showAddError('تم حفظ التفاعل، لكن تعذر تحديث القائمة.');
