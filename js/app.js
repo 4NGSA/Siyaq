@@ -1118,11 +1118,13 @@ ${interactionsText}
 3. [توصية ثالثة]
 4. [توصية رابعة]
 
-لا تضف أي نص خارج هذه الأقسام الأربعة.`;
+لا تضف أي نص خارج هذه الأقسام الأربعة.
+
+اجعل كل قسم موجزاً. التوصيات لا تتجاوز 4 نقاط قصيرة.`;
 
   const response = await requestAiReport({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 400,
+    max_tokens: 600,
     messages: [{ role: 'user', content: prompt }],
   }, signal);
   const report = parseAiReport(response?.content?.[0]?.text);
