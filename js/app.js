@@ -678,7 +678,11 @@ function updateStats() {
 function showLoadError() {
   const list = byId('clist');
   if (list) {
-    list.innerHTML = '<div class="empty" role="alert">تعذر تحميل البيانات. تحقق من الاتصال.</div>';
+    list.innerHTML = '<div class="empty" role="alert">'
+      + '<div class="empty-t">تعذر تحميل البيانات.</div>'
+      + '<div class="empty-s">تحقق من اتصالك ثم حاول مجدداً.</div>'
+      + '<button type="button" class="empty-act" data-action="retry-load">إعادة المحاولة</button>'
+      + '</div>';
   }
 }
 
@@ -1585,6 +1589,7 @@ function handleDelegatedClick(event) {
     if (action === 'clear-search') clearSearch();
     else if (action === 'go-add') goPage('add');
     else if (action === 'retry-report') retryReport();
+    else if (action === 'retry-load') loadCustomers();
     else if (action === 'open-report') openReport(actionElement.dataset.id);
     else if (action === 'load-more-customers') appendCustomerBatch();
     else if (action === 'load-more-timeline') loadMoreTimeline(actionElement);
