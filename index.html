@@ -1,1910 +1,259 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>سياق</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<style>
-@font-face {
-  font-family: 'Thmanyah Serif Text';
-  src: url('fonts/thmanyahseriftext-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Thmanyah Serif Text';
-  src: url('fonts/thmanyahseriftext-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#12141C;
-  --bg2:#191C28;
-  --panel:#1E2236;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.13);
-  --text:#E4E8F0;
-  --text2:#B0B8CC;
-  --text3:#9AA3BA;
-  --blue:#4F8EF7;
-  --blue-l:rgba(79,142,247,0.13);
-  --blue-m:rgba(79,142,247,0.20);
-  --green:#2DD4A0;
-  --green-l:rgba(45,212,160,0.13);
-  --amber:#FF6B6B;
-  --amber-l:rgba(255,107,107,0.13);
-  --red:#F56565;
-  --red-l:rgba(245,101,101,0.13);
-  --violet:#A78BFA;
-  --violet-l:rgba(167,139,250,0.13);
-  --cyan:#38BDF8;
-  --cyan-l:rgba(56,189,248,0.13);
-
-  /* ===== DESIGN TOKENS (semantic layer over the primitives above) ===== */
-
-  /* Spacing scale (4px base) */
-  --space-0:0; --space-1:2px; --space-2:4px; --space-3:6px; --space-4:8px;
-  --space-5:10px; --space-6:12px; --space-7:14px; --space-8:16px; --space-9:18px;
-  --space-10:20px; --space-11:22px; --space-14:36px; --space-16:44px;
-  /* off-grid half-steps (pixel-preserving; candidates for normalization) */
-  --space-3px:3px; --space-5px:5px; --space-7px:7px; --space-9px:9px;
-  --space-11px:11px; --space-13px:13px; --space-15px:15px; --space-42px:42px;
-
-  /* Radius scale */
-  --radius-xs:4px; --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
-  --radius-xl:14px; --radius-card-alt:7px; --radius-ai:9px;
-  --radius-full:50%; --radius-pill:999px;
-
-  /* Typography */
-  --font-serif:'Thmanyah Serif Text',serif;
-  --font-sans:'IBM Plex Sans Arabic',sans-serif;
-  --text-2xs:10px; --text-xs:11px; --text-sm:12px; --text-base:13px;
-  --text-md:14px; --text-lg:15px; --text-xl:17px; --text-2xl:20px; --text-stat:26px;
-  --weight-light:300; --weight-regular:400; --weight-medium:500; --weight-semibold:600;
-  --leading-none:1; --leading-snug:1.55; --leading-normal:1.65; --leading-relaxed:1.7;
-
-  /* Elevation / shadow */
-  --shadow-none:none;
-  --shadow-card-hover:0 2px 10px rgba(79,142,247,.07);
-  --ring-focus:0 0 0 3px rgba(79,142,247,.18);
-  --ring-focus-soft:0 0 0 3px rgba(79,142,247,.14);
-  --shadow-backdrop-blur:blur(3px);
-
-  /* Z-index */
-  --z-base:0; --z-overlay:200; --z-cursor:9999;
-
-  /* Transition / duration / easing */
-  --dur-instant:.15s; --dur-fast:.18s; --dur-base:.2s; --dur-panel:.22s;
-  --dur-cursor:.25s; --dur-enter:.35s; --dur-step:.4s; --dur-spin:.7s;
-  --delay-1:.05s; --delay-2:.1s; --delay-3:.15s; --delay-4:.2s;
-  --ease-standard:cubic-bezier(.4,0,.2,1); --ease-linear:linear; --ease-default:ease;
-
-  /* Motion tokens (P0-0): one small set; everything references these */
-  --t-micro:120ms;  /* press, hover, toggle, focus ring */
-  --t-fast:180ms;   /* dropdowns, rows, gen-step, inline confirm */
-  --t-base:220ms;   /* cards, panel content, count-up blips */
-  --t-panel:280ms;  /* slide-over enter */
-  --t-exit:180ms;   /* exits ~20-30% faster than enters */
-  --ease-out:cubic-bezier(.16,1,.3,1);     /* enters: fast in, soft settle */
-  --ease-in:cubic-bezier(.4,0,1,1);        /* exits */
-  --ease-snap:cubic-bezier(.4,0,.2,1);     /* toggles, in-place */
-  --ease-spring:cubic-bezier(.34,1.56,.64,1); /* success pop, tiny overshoot */
-  --stagger-step:50ms;
-
-  /* Cursor sizing tokens (P0-4) */
-  --cursor-size:9px; --cursor-size-big:34px;
-
-  /* Layout dimensions */
-  --sidebar-w:220px; --topbar-h:50px; --rpanel-w:460px; --recent-col-w:340px;
-  --border-hairline:1px; --border-control:1.5px; --border-accent:2px;
-  /* Responsive layout tokens */
-  --rpanel-w-tablet:420px; --hamb-size:44px; --touch-target:44px;
-  --touch-target-lg:48px; --touch-target-xl:56px; --rp-x-touch:44px;
-  --dur-drawer:.25s;
-  --scrim-mobile:rgba(0,0,0,.5); --scrim-mobile-blur:blur(2px);
-  --z-drawer:300; --z-scrim:250;
-
-  /* ===== SEMANTIC COLOR LAYER ===== */
-  /* Surfaces & borders */
-  --color-surface:var(--bg);
-  --color-surface-sunken:var(--bg2);
-  --color-surface-raised:var(--panel);
-  --color-border:var(--border);
-  --color-border-strong:var(--border2);
-  --color-scrim:rgba(8,10,16,.55);
-
-  /* Text */
-  --color-text-primary:var(--text);
-  --color-text-secondary:var(--text2);
-  --color-text-tertiary:var(--text3);
-  --color-text-on-accent:#FFFFFF;
-
-  /* Accent */
-  --color-accent:var(--blue);
-  --color-accent-subtle:var(--blue-l);
-  --color-accent-subtle-2:rgba(79,142,247,0.18); /* phone chb-ico; .18 preserved (≠ --blue-m .20) */
-  --color-accent-faint:rgba(79,142,247,0.07);
-  --color-accent-border:rgba(79,142,247,0.2);
-  --color-accent-on-subtle-text:#1D4ED8;
-  --color-accent-on-subtle-border:#93C5FD;
-  --color-accent-border-soft:#BFDBFE;
-  --color-accent-text:#6FA3FB;
-
-  /* Status — Success */
-  --color-success:var(--green);
-  --color-success-subtle:var(--green-l);
-  --color-success-subtle-2:rgba(45,212,160,0.18);
-  --color-success-on-subtle-text:#065F46;
-  --color-success-on-subtle-border:#6EE7B7;
-
-  /* Status — Warning (mislabeled "amber" = #FF6B6B) */
-  --color-warning:var(--amber);
-  --color-warning-subtle:var(--amber-l);
-  --color-warning-bg-12:rgba(255,107,107,0.12);
-  --color-warning-bg-10:rgba(255,107,107,0.1);
-  --color-warning-border:rgba(255,107,107,0.35);
-  --color-warning-border-30:rgba(255,107,107,0.3);
-
-  /* Status — Danger */
-  --color-danger:var(--red);
-  --color-danger-subtle:var(--red-l);
-
-  /* Status — Info (cyan/violet accents) */
-  --color-info:var(--cyan);
-  --color-info-subtle:var(--cyan-l);
-  --color-info-subtle-2:rgba(56,189,248,0.18);
-  --color-violet:var(--violet);
-  --color-violet-subtle:var(--violet-l);
-  --color-violet-subtle-2:rgba(167,139,250,0.18);
-
-  /* Channel brand palette (sidebar dots) */
-  --channel-phone:#4F8EF7;
-  --channel-whatsapp:#00A877;
-  --channel-branch:#7C4DCC;
-  --channel-twitter:#0099CC;
-  --channel-email:#E08A00;
-  /* Channel chip/icon palette (CH_COLORS + chb-ico) */
-  --channel-phone-chip:var(--color-accent);
-  --channel-whatsapp-chip:var(--color-success);
-  --channel-branch-chip:var(--color-violet);
-  --channel-twitter-chip:var(--color-info);
-  --channel-email-chip:#F5A623;
-  --channel-fallback:#888;
-  --color-amber-true:#F5A623;
-  --color-amber-true-subtle:rgba(245,166,35,0.18);
-
-  /* Cursor */
-  --color-cursor-fill:rgba(79,142,247,.16);
-  --color-cursor-ring:var(--color-accent);
-}
-html{scroll-behavior:smooth}
-body{
-  background:var(--color-surface);
-  color:var(--color-text-primary);
-  font-family:var(--font-serif);
-  font-size:var(--text-md);line-height:var(--leading-normal);
-  min-height:100vh;
-  direction:rtl;
-}
-/* custom cursor off by default; native cursor kept everywhere */
-#cur{display:none;
-  width:var(--cursor-size);height:var(--cursor-size);
-  background:var(--color-accent);border-radius:var(--radius-full);
-  position:fixed;top:0;left:0;
-  pointer-events:none;z-index:var(--z-cursor);
-  will-change:transform;
-  transform:translate3d(0,0,0) translate(-50%,-50%);
-  transition:width var(--t-micro) var(--ease-snap),height var(--t-micro) var(--ease-snap),background var(--t-micro) var(--ease-snap);
-}
-/* interactive controls get a pointer when the custom cursor is off */
-.nav-btn,.ccard,.chb,.stbtn,.btn-add,.rp-x,.btn-note,.btn-cls{cursor:pointer}
-.fi,.search-box input{cursor:text}
-/* enable the custom cursor only for a fine, hovering pointer */
-@media (hover:hover) and (pointer:fine){
-  body{cursor:none}
-  #cur{display:block}
-  .nav-btn,.ccard,.chb,.stbtn,.btn-add,.rp-x,.btn-note,.btn-cls,
-  .search-box input,.fi{cursor:none}
-}
-/* global focus indicators (visible even with custom cursor active) */
-:focus-visible{outline:var(--border-accent) solid var(--color-accent);outline-offset:2px;border-radius:var(--radius-md)}
-.fi:focus-visible,.search-box input:focus-visible{outline:var(--border-accent) solid var(--color-accent);outline-offset:1px}
-.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-.skip-link{position:absolute;right:var(--space-4);top:-60px;z-index:var(--z-cursor);background:var(--color-accent);color:var(--color-text-on-accent);padding:var(--space-4) var(--space-7);border-radius:var(--radius-md);font-size:var(--text-base);transition:top var(--dur-instant)}
-.skip-link:focus{top:var(--space-4)}
-#cur.big{width:var(--cursor-size-big);height:var(--cursor-size-big);background:var(--color-cursor-fill);border:var(--border-control) solid var(--color-cursor-ring)}
-
-/* mobile-only controls hidden on desktop (shown inside max-width media queries) */
-.hamb{display:none}
-.nav-scrim{display:none}
-
-.shell{display:flex;height:100vh;overflow:hidden;direction:rtl}
-
-/* SIDEBAR */
-.sidebar{
-  width:var(--sidebar-w);flex-shrink:0;
-  background:var(--color-surface-raised);
-  border-left:var(--border-hairline) solid var(--color-border);
-  display:flex;flex-direction:column;
-}
-.sb-top{
-  padding:var(--space-9) var(--space-8) var(--space-7);
-  border-bottom:var(--border-hairline) solid var(--color-border);
-}
-.sb-logo{display:flex;align-items:center;gap:var(--space-5);margin-bottom:var(--space-3px)}
-.sb-icon{
-  width:32px;height:32px;border-radius:var(--radius-md);
-  background:var(--color-accent);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-}
-.sb-brand-name{
-  font-size:var(--text-2xl);font-weight:var(--weight-semibold);
-  letter-spacing:0.01em;color:var(--color-text-primary);
-}
-.sb-sub{font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:1px}
-
-.sb-nav{padding:var(--space-5) var(--space-4);flex:1}
-.sb-sec-label{
-  font-size:var(--text-2xs);font-weight:var(--weight-medium);letter-spacing:0.08em;
-  color:var(--color-text-tertiary);padding:var(--space-4) var(--space-4) var(--space-2);text-transform:uppercase;
-}
-.nav-btn{
-  display:flex;align-items:center;gap:var(--space-5);
-  width:100%;padding:var(--space-9px) var(--space-5);
-  border-radius:var(--radius-md);border:none;
-  background:transparent;color:var(--color-text-secondary);
-  font-family:var(--font-serif);
-  font-size:var(--text-base);text-align:right;
-  transition:all var(--dur-instant);margin-bottom:var(--space-1);
-}
-.nav-btn svg{width:16px;height:16px;flex-shrink:0;opacity:0.55}
-.nav-btn:hover{background:var(--color-surface-sunken);color:var(--color-text-primary)}
-.nav-btn.active{background:var(--color-accent-subtle);color:var(--color-accent-text);font-weight:var(--weight-medium)}
-.nav-btn.active svg{opacity:1}
-
-.sb-channels{padding:var(--space-2) var(--space-4) var(--space-5);display:flex;flex-direction:column;gap:var(--space-5px)}
-.ch-row{display:flex;justify-content:space-between;align-items:center;font-size:var(--text-sm);color:var(--color-text-secondary);padding:var(--space-1) var(--space-2)}
-.ch-dot{width:6px;height:6px;border-radius:var(--radius-full);flex-shrink:0}
-.ch-left{display:flex;align-items:center;gap:var(--space-7px)}
-
-.sb-footer{
-  padding:var(--space-6) var(--space-7);
-  border-top:var(--border-hairline) solid var(--color-border);
-}
-.sb-kpi{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5px);font-size:var(--text-sm)}
-.sb-kpi-l{color:var(--color-text-tertiary)}
-.sb-kpi-v{font-weight:var(--weight-medium)}
-
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{
-  height:var(--topbar-h);flex-shrink:0;
-  background:var(--color-surface-raised);border-bottom:var(--border-hairline) solid var(--color-border);
-  display:flex;align-items:center;padding:0 var(--space-11);gap:var(--space-6);
-}
-.topbar-title{font-size:var(--text-lg);font-weight:var(--weight-medium);color:var(--color-text-primary)}
-.topbar-r{margin-right:auto;display:flex;align-items:center;gap:var(--space-5)}
-.api-badge{
-  font-size:var(--text-xs);padding:var(--space-3px) var(--space-9px);border-radius:var(--radius-xs);
-  background:var(--color-success-subtle);color:var(--color-success);
-  border:var(--border-hairline) solid var(--color-success);
-}
-
-.content{flex:1;overflow-y:auto;padding:var(--space-11)}
-
-/* PAGES */
-.page{display:none}
-.page.active{display:block}
-
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-5);margin-bottom:var(--space-11)}
-.scard{
-  background:var(--color-surface-raised);border:var(--border-hairline) solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-7) var(--space-8);
-  border-top:var(--border-accent) solid transparent;
-  /* P0-8: stat cards fade-up on first paint */
-  animation:itemIn var(--t-base) var(--ease-out) both;
-}
-.stats .scard:nth-child(1){animation-delay:0ms}
-.stats .scard:nth-child(2){animation-delay:var(--stagger-step)}
-.stats .scard:nth-child(3){animation-delay:calc(var(--stagger-step) * 2)}
-.stats .scard:nth-child(4){animation-delay:calc(var(--stagger-step) * 3)}
-.scard.bl{border-top-color:var(--color-accent)}
-.scard.am{border-top-color:var(--color-warning)}
-.scard.gr{border-top-color:var(--color-success)}
-.scard.re{border-top-color:var(--color-danger)}
-.scard-n{font-size:var(--text-stat);font-weight:var(--weight-light);line-height:var(--leading-none);margin-bottom:var(--space-3px)}
-.scard-l{font-size:var(--text-sm);color:var(--color-text-tertiary)}
-
-/* SEARCH */
-.search-box{position:relative;margin-bottom:var(--space-9)}
-.search-box input{
-  width:100%;padding:var(--space-11px) var(--space-42px) var(--space-11px) var(--space-7);
-  font-size:var(--text-base);font-family:var(--font-sans);
-  border:var(--border-control) solid var(--color-border-strong);border-radius:var(--radius-lg);
-  background:var(--color-surface-raised);color:var(--color-text-primary);outline:none;
-  transition:border-color var(--dur-base),box-shadow var(--dur-base);direction:rtl;
-}
-.search-box input:focus{border-color:var(--color-accent);box-shadow:var(--ring-focus)}
-.search-box input::placeholder{color:var(--color-text-tertiary)}
-.search-ico{position:absolute;right:var(--space-7);top:50%;transform:translateY(-50%);color:var(--color-text-tertiary);pointer-events:none}
-
-.list-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5)}
-.list-hdr-t{font-size:var(--text-base);font-weight:var(--weight-medium)}
-.list-hdr-m{font-size:var(--text-sm);color:var(--color-text-tertiary)}
-
-/* CUSTOMER CARDS */
-.clist{display:flex;flex-direction:column;gap:var(--space-3)}
-/* P0-5: per-row wrapper groups a card with its AI card so filter toggles them together */
-.row-wrap{display:flex;flex-direction:column}
-.row-wrap[hidden]{display:none}
-.ccard{
-  background:var(--color-surface-raised);border:var(--border-hairline) solid var(--color-border);
-  border-radius:var(--radius-lg);padding:var(--space-13px) var(--space-15px);
-  display:grid;grid-template-columns:auto 1fr auto;
-  align-items:center;gap:var(--space-13px);
-  /* P1-1: list only the props that change (transition:all is wasteful) */
-  transition:transform var(--t-micro) var(--ease-snap),border-color var(--t-micro) var(--ease-snap),box-shadow var(--t-micro) var(--ease-snap);
-  /* P0-6: skip layout/paint for off-screen rows; stable scrollbar via intrinsic size */
-  content-visibility:auto;contain-intrinsic-size:auto 72px;
-}
-.ccard:hover{border-color:var(--color-accent);box-shadow:var(--shadow-card-hover)}
-/* P0-8: capped, settled-set list-enter stagger */
-.ccard.enter{animation:itemIn var(--t-base) var(--ease-out) both}
-@keyframes itemIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.ccard:focus-visible{border-color:var(--color-accent);box-shadow:var(--shadow-card-hover);outline:var(--border-accent) solid var(--color-accent);outline-offset:2px}
-.av{
-  width:38px;height:38px;border-radius:var(--radius-full);
-  background:var(--color-accent-subtle);color:var(--color-accent);
-  display:flex;align-items:center;justify-content:center;
-  font-size:var(--text-base);font-weight:var(--weight-medium);flex-shrink:0;
-}
-.ci-name{font-size:var(--text-md);font-weight:var(--weight-medium);margin-bottom:var(--space-1)}
-.ci-meta{font-size:var(--text-sm);color:var(--color-text-secondary);display:flex;gap:var(--space-4);align-items:center}
-.badge{
-  display:inline-flex;align-items:center;gap:var(--space-2);
-  font-size:var(--text-xs);font-weight:var(--weight-medium);padding:var(--space-3px) var(--space-4);
-  border-radius:var(--radius-pill);
-}
-.b-amber{background:var(--color-warning-subtle);color:var(--color-warning);border:var(--border-hairline) solid var(--color-warning-border)}
-.b-green{background:var(--color-success-subtle);color:var(--color-success);border:var(--border-hairline) solid rgba(45,212,160,0.35)}
-.b-blue{background:var(--color-accent-subtle);color:var(--color-accent-text);border:var(--border-hairline) solid var(--color-accent-border)}
-.ccard-arrow{color:var(--color-text-tertiary)}
-
-/* ADD PAGE */
-.add-layout{display:grid;grid-template-columns:1fr var(--recent-col-w);gap:var(--space-9);align-items:start}
-.fcard{
-  background:var(--color-surface-raised);border:var(--border-hairline) solid var(--color-border);
-  border-radius:var(--radius-xl);padding:var(--space-11);
-}
-.fcard-title{font-size:var(--text-xl);font-weight:var(--weight-medium);margin-bottom:var(--space-3px)}
-.fcard-sub{font-size:var(--text-sm);color:var(--color-text-tertiary);margin-bottom:var(--space-9)}
-.fg{display:flex;flex-direction:column;gap:var(--space-5px);margin-bottom:var(--space-13px)}
-.fl{font-size:var(--text-xs);font-weight:var(--weight-medium);letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text-tertiary)}
-.fi{
-  padding:var(--space-9px) var(--space-11px);font-size:var(--text-base);
-  font-family:var(--font-serif);
-  border:var(--border-control) solid var(--color-border);border-radius:var(--radius-md);
-  background:var(--color-surface);color:var(--color-text-primary);outline:none;
-  transition:all var(--dur-instant);direction:rtl;
-}
-.fi:focus{border-color:var(--color-accent);background:var(--color-surface-raised);box-shadow:var(--ring-focus-soft)}
-.fi::placeholder{color:var(--color-text-tertiary)}
-textarea.fi{resize:vertical;min-height:78px}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6)}
-
-.ch-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-7px)}
-.chb{
-  padding:var(--space-4) var(--space-2);border-radius:var(--radius-md);
-  border:var(--border-control) solid var(--color-border);
-  background:var(--color-surface);
-  transition:background-color var(--t-fast) var(--ease-snap),border-color var(--t-fast) var(--ease-snap),color var(--t-fast) var(--ease-snap);
-  display:flex;flex-direction:column;align-items:center;gap:var(--space-2);
-  font-family:var(--font-serif);
-}
-.chb-ico{
-  width:26px;height:26px;border-radius:var(--radius-sm);
-  display:flex;align-items:center;justify-content:center;
-  font-size:var(--text-sm);
-}
-.chb-lbl{font-size:var(--text-2xs);color:var(--color-text-secondary)}
-.chb:hover{border-color:var(--color-border-strong);background:var(--color-surface-raised)}
-.chb.sel{border-color:var(--color-accent);background:var(--color-accent-subtle)}
-.chb.sel .chb-lbl{color:var(--color-accent)}
-
-.strow{display:flex;gap:var(--space-4)}
-.stbtn{
-  flex:1;padding:var(--space-4);border-radius:var(--radius-md);
-  border:var(--border-control) solid var(--color-border);background:var(--color-surface);
-  font-family:var(--font-serif);
-  font-size:var(--text-sm);font-weight:var(--weight-medium);
-  display:flex;align-items:center;justify-content:center;gap:var(--space-3);
-  transition:background-color var(--t-fast) var(--ease-snap),border-color var(--t-fast) var(--ease-snap),color var(--t-fast) var(--ease-snap);
-}
-.stbtn.sel-u{border-color:var(--color-warning);background:var(--color-warning-bg-12);color:var(--color-warning)}
-.stbtn.sel-r{border-color:var(--color-success);background:var(--color-success-subtle);color:var(--color-success)}
-
-.fdiv{height:1px;background:var(--color-border);margin:var(--space-8) 0}
-.btn-add{
-  width:100%;padding:var(--space-5);
-  background:var(--color-accent);color:var(--color-text-on-accent);
-  border:none;border-radius:var(--radius-md);
-  font-family:var(--font-serif);
-  font-size:var(--text-base);font-weight:var(--weight-medium);
-  display:flex;align-items:center;justify-content:center;gap:var(--space-4);
-  transition:opacity var(--dur-instant);
-}
-.btn-add:hover{opacity:.88}
-/* P1-2: inline one-shot confirm (NOT a toast system) — spring-in, faster exit, kept mounted for transition */
-.tst{
-  margin-top:var(--space-11px);padding:var(--space-9px) var(--space-13px);
-  background:var(--color-success-subtle);border:var(--border-hairline) solid var(--color-success);
-  border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-success);
-  display:none;align-items:center;gap:var(--space-4);
-  transform:translateY(8px);opacity:0;
-  transition:transform var(--t-base) var(--ease-spring),opacity var(--t-base) var(--ease-out);
-}
-.tst.show{display:flex}
-.tst.show.in{transform:none;opacity:1}
-.tst.leaving{opacity:0;transform:translateY(4px);transition-duration:var(--t-exit);transition-timing-function:var(--ease-in)}
-.tst-err{
-  background:var(--color-danger-subtle);border-color:var(--color-danger);color:var(--color-danger);
-}
-
-.rcard{
-  background:var(--color-surface-raised);border:var(--border-hairline) solid var(--color-border);
-  border-radius:var(--radius-xl);padding:var(--space-9);
-}
-.rcard-title{font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-13px)}
-.rec-list{display:flex;flex-direction:column;gap:var(--space-7px)}
-.rec-item{
-  display:flex;align-items:center;gap:var(--space-9px);
-  padding:var(--space-4) var(--space-5);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-sm);
-}
-.rec-av{
-  width:28px;height:28px;border-radius:var(--radius-full);
-  background:var(--color-accent-subtle);color:var(--color-accent);
-  display:flex;align-items:center;justify-content:center;
-  font-size:var(--text-2xs);font-weight:var(--weight-medium);flex-shrink:0;
-}
-.rec-name{font-weight:var(--weight-medium);margin-bottom:1px}
-.rec-meta{font-size:var(--text-xs);color:var(--color-text-tertiary)}
-/* P1-4: optimistic recent item enters, dimmed while the write is in flight */
-.rec-item{animation:itemIn var(--t-fast) var(--ease-out) both}
-.rec-item.pending{opacity:.6}
-
-/* REPORT PANEL */
-.backdrop{
-  position:fixed;inset:0;
-  background:var(--color-scrim);
-  z-index:var(--z-overlay);display:none;
-  align-items:flex-start;justify-content:flex-start;
-  opacity:0;transition:opacity var(--t-base) var(--ease-out);
-}
-.backdrop.show{display:flex}
-/* P0-3: defer the (repaint-heavy) blur until the slide finishes; never blur during animation */
-.backdrop.blurred{backdrop-filter:var(--shadow-backdrop-blur)}
-.backdrop.open{opacity:1}
-.backdrop.closing{transition-duration:var(--t-exit);opacity:0}
-.rpanel{
-  width:var(--rpanel-w);height:100vh;
-  background:var(--color-surface-raised);
-  border-right:var(--border-hairline) solid var(--color-border);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  /* right-anchored in RTL (flex-start = right): enter FROM the right edge */
-  transform:translateX(100%);opacity:0;
-  transition:transform var(--t-panel) var(--ease-out),opacity 200ms var(--ease-out);
-  will-change:transform;
-}
-.backdrop.open .rpanel{transform:translateX(0);opacity:1}
-.backdrop.closing .rpanel{transition-duration:var(--t-exit);transition-timing-function:var(--ease-in)}
-
-.rp-hdr{
-  padding:var(--space-9) var(--space-9) var(--space-7);
-  border-bottom:var(--border-hairline) solid var(--color-border);
-  flex-shrink:0;
-}
-.rp-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-6)}
-.rp-cust{display:flex;align-items:center;gap:var(--space-11px)}
-.rp-av{
-  width:42px;height:42px;border-radius:var(--radius-full);
-  background:var(--color-accent-subtle);color:var(--color-accent);
-  display:flex;align-items:center;justify-content:center;
-  font-size:var(--text-lg);font-weight:var(--weight-medium);flex-shrink:0;
-}
-.rp-name{font-size:var(--text-xl);font-weight:var(--weight-medium);margin-bottom:var(--space-1)}
-.rp-meta{font-size:var(--text-sm);color:var(--color-text-tertiary)}
-.rp-x{
-  width:28px;height:28px;border-radius:var(--radius-sm);
-  border:var(--border-hairline) solid var(--color-border);background:transparent;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--color-text-secondary);font-size:var(--text-md);transition:all var(--dur-instant);flex-shrink:0;
-}
-.rp-x:hover{background:var(--color-surface-sunken)}
-.rp-channels{display:flex;gap:var(--space-3);flex-wrap:wrap}
-.rp-ch{
-  display:inline-flex;align-items:center;gap:var(--space-2);
-  padding:var(--space-3px) var(--space-4);border-radius:var(--radius-xs);
-  font-size:var(--text-xs);border:var(--border-hairline) solid var(--color-border-strong);
-  background:var(--color-surface);color:var(--color-text-secondary);
-}
-.rp-ch-dot{width:5px;height:5px;border-radius:var(--radius-full)}
-
-.rp-body{flex:1;overflow-y:auto;padding:var(--space-9)}
-.rp-sec{margin-bottom:var(--space-9)}
-.rp-sec:last-child{margin-bottom:0}
-.rp-sec-lbl{
-  font-size:var(--text-2xs);font-weight:var(--weight-medium);letter-spacing:0.1em;
-  text-transform:uppercase;color:var(--color-text-tertiary);
-  margin-bottom:var(--space-4);display:flex;align-items:center;gap:var(--space-3);
-}
-.rp-sec-lbl .sdot{width:5px;height:5px;border-radius:var(--radius-full)}
-.rp-txt{font-size:var(--text-base);line-height:var(--leading-relaxed);color:var(--color-text-primary)}
-
-.iss-item{
-  display:flex;gap:var(--space-9px);align-items:flex-start;
-  padding:var(--space-9px) var(--space-11px);background:var(--color-warning-bg-10);
-  border:var(--border-hairline) solid var(--color-warning-border-30);border-radius:var(--radius-card-alt);
-  font-size:var(--text-base);color:var(--color-text-primary);
-  margin-bottom:var(--space-3);line-height:var(--leading-snug);
-}
-.iss-item:last-child{margin-bottom:0}
-.issdot{width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-warning);margin-top:var(--space-5px);flex-shrink:0}
-
-.sug-item{
-  display:flex;gap:var(--space-9px);align-items:flex-start;
-  padding:var(--space-9px) var(--space-11px);background:var(--color-accent-subtle);
-  border:var(--border-hairline) solid rgba(79,142,247,0.4);border-radius:var(--radius-card-alt);
-  font-size:var(--text-base);color:var(--color-text-primary);
-  margin-bottom:var(--space-3);line-height:var(--leading-snug);
-}
-.sug-item:last-child{margin-bottom:0}
-.sug-num{
-  width:18px;height:18px;border-radius:var(--radius-full);
-  background:var(--color-accent);color:var(--color-text-on-accent);
-  display:flex;align-items:center;justify-content:center;
-  font-size:var(--text-2xs);font-weight:var(--weight-medium);flex-shrink:0;margin-top:var(--space-1);
-}
-
-/* TIMELINE */
-.tl{display:flex;flex-direction:column;gap:0}
-.tl-item{display:flex;gap:var(--space-11px);padding-bottom:var(--space-7);position:relative}
-.tl-item:last-child{padding-bottom:0}
-.tl-l{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:26px}
-.tl-ico{
-  width:26px;height:26px;border-radius:var(--radius-full);
-  display:flex;align-items:center;justify-content:center;
-  font-size:var(--text-xs);flex-shrink:0;
-}
-.tl-line{flex:1;width:1px;background:var(--color-border);margin-top:var(--space-3px)}
-.tl-item:last-child .tl-line{display:none}
-.tl-c{flex:1;padding-top:var(--space-3px)}
-.tl-meta{font-size:var(--text-xs);color:var(--color-text-tertiary);margin-bottom:var(--space-3px);display:flex;gap:var(--space-3);align-items:center}
-.tl-txt{font-size:var(--text-base);color:var(--color-text-primary);line-height:var(--leading-snug)}
-.tl-bdg{margin-top:var(--space-5px)}
-
-.rp-ftr{
-  padding:var(--space-6) var(--space-9);border-top:var(--border-hairline) solid var(--color-border);
-  display:flex;gap:var(--space-4);flex-shrink:0;
-}
-.btn-note{
-  flex:1;padding:var(--space-9px);
-  border:var(--border-control) solid var(--color-accent);background:var(--color-accent-subtle);
-  color:var(--color-accent-text);border-radius:var(--radius-md);
-  font-family:var(--font-sans);
-  font-size:var(--text-base);font-weight:var(--weight-medium);
-  display:flex;align-items:center;justify-content:center;gap:var(--space-3);
-  transition:all var(--dur-instant);
-}
-.btn-note:hover{background:var(--color-accent);color:var(--color-text-on-accent)}
-.btn-cls{
-  padding:var(--space-9px) var(--space-15px);
-  border:var(--border-hairline) solid var(--color-border);background:transparent;
-  color:var(--color-text-secondary);border-radius:var(--radius-md);
-  font-family:var(--font-sans);
-  font-size:var(--text-base);transition:all var(--dur-instant);
-}
-.btn-cls:hover{background:var(--color-surface)}
-
-/* GENERATING */
-.gen-state{
-  display:flex;flex-direction:column;align-items:center;
-  padding:var(--space-14) var(--space-10);gap:var(--space-7);
-}
-.spin{
-  width:22px;height:22px;border:var(--border-accent) solid var(--color-border);
-  border-top-color:var(--color-accent);border-radius:var(--radius-full);
-  animation:sp var(--dur-spin) var(--ease-linear) infinite;
-}
-@keyframes sp{to{transform:rotate(360deg)}}
-.gen-txt{font-size:var(--text-base);color:var(--color-text-tertiary)}
-.gen-steps{display:flex;flex-direction:column;gap:var(--space-5px);width:100%;max-width:260px}
-.gs{
-  display:flex;align-items:center;gap:var(--space-4);
-  padding:var(--space-7px) var(--space-5);border-radius:var(--radius-sm);
-  font-size:var(--text-sm);color:var(--color-text-tertiary);
-  background:var(--color-surface);border:var(--border-hairline) solid var(--color-border);
-  opacity:.35;transition:opacity var(--dur-step),border-color var(--dur-step);
-}
-.gs.done{opacity:1;border-color:var(--color-success);color:var(--color-text-secondary)}
-.gs-dot{width:5px;height:5px;border-radius:var(--radius-full);background:var(--color-text-tertiary);flex-shrink:0;transition:background var(--dur-step)}
-.gs.done .gs-dot{background:var(--color-success)}
-
-/* P0-2: layout-matched skeleton with symmetric (RTL-safe) shimmer */
-.sk-body{padding:var(--space-9)}
-.sk-sec{margin-bottom:var(--space-9)}
-.sk{position:relative;overflow:hidden;background:var(--color-border-strong);border-radius:var(--radius-sm)}
-.sk::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);
-  transform:translateX(-100%);animation:shimmer 1.2s ease-in-out infinite}
-.sk-lbl{height:10px;width:120px;margin-bottom:var(--space-5)}
-.sk-line{height:13px;margin-bottom:var(--space-4)}
-.sk-line.w90{width:90%}.sk-line.w70{width:70%}.sk-line.w50{width:50%}
-@keyframes shimmer{to{transform:translateX(100%)}}
-
-/* P1-8 (CSS portion): subtle per-section reveal on rendered reports */
-.rp-body .rp-sec{animation:revealSec var(--t-base) var(--ease-out) both}
-.rp-body .rp-sec:nth-child(2){animation-delay:40ms}
-.rp-body .rp-sec:nth-child(3){animation-delay:80ms}
-.rp-body .rp-sec:nth-child(4){animation-delay:120ms}
-.rp-body .rp-sec:nth-child(5){animation-delay:160ms}
-@keyframes revealSec{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
-
-.ai-card{
-  margin-top:var(--space-4);
-  background:var(--color-accent-faint);
-  border:var(--border-hairline) solid var(--color-accent-border);
-  border-radius:var(--radius-ai);padding:var(--space-5) var(--space-13px);
-}
-.ai-card-header{
-  display:flex;align-items:center;gap:var(--space-3);
-  font-size:var(--text-xs);font-weight:var(--weight-medium);color:var(--color-accent);
-  margin-bottom:var(--space-4);
-}
-.ai-card-body{display:flex;flex-direction:column;gap:var(--space-5px)}
-.ai-mood-row{display:flex;gap:var(--space-3);flex-wrap:wrap}
-.ai-mood-badge{
-  font-size:var(--text-xs);font-weight:var(--weight-medium);padding:var(--space-3px) var(--space-9px);
-  border-radius:var(--radius-pill);border:var(--border-hairline) solid;
-  display:inline-flex;align-items:center;gap:var(--space-2);
-}
-.ai-classify{font-size:var(--text-sm);color:var(--color-text-primary)}
-.ai-pred{font-size:var(--text-sm);color:var(--color-text-secondary)}
-
-/* EMPTY / ERROR STATES (P1-6): monochrome, integrated, always a next step */
-.empty{text-align:center;padding:var(--space-16) var(--space-10);color:var(--color-text-tertiary);font-size:var(--text-base)}
-.empty-t{color:var(--color-text-secondary);font-weight:var(--weight-medium);margin-bottom:var(--space-3)}
-.empty-s{font-size:var(--text-sm);margin-bottom:var(--space-7)}
-.empty-act{
-  font-family:var(--font-serif);font-size:var(--text-sm);font-weight:var(--weight-medium);
-  padding:var(--space-5) var(--space-8);border-radius:var(--radius-md);
-  border:var(--border-control) solid var(--color-accent);background:var(--color-accent-subtle);
-  color:var(--color-accent-text);cursor:pointer;
-  transition:background-color var(--t-fast) var(--ease-snap),color var(--t-fast) var(--ease-snap);
-}
-.empty-act:hover{background:var(--color-accent);color:var(--color-text-on-accent)}
-.rp-err{padding:var(--space-10);display:flex;flex-direction:column;align-items:center;gap:var(--space-7);text-align:center}
-.rp-err-t{font-size:var(--text-base);color:var(--color-text-secondary)}
-
-@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.fu{animation:fu var(--dur-enter) var(--ease-default) forwards}
-.fd1{animation-delay:var(--delay-1);opacity:0}
-.fd2{animation-delay:var(--delay-2);opacity:0}
-.fd3{animation-delay:var(--delay-3);opacity:0}
-.fd4{animation-delay:var(--delay-4);opacity:0}
-
-/* P1-1 / P1-3: press + hover affordances, pointer-gated (no sticky hover on touch) */
-@media (hover:hover) and (pointer:fine){
-  .btn-add,.btn-note,.chb,.stbtn,.rp-x,.btn-cls{
-    transition:transform var(--t-micro) var(--ease-snap),background-color var(--t-fast) var(--ease-snap),
-      border-color var(--t-fast) var(--ease-snap),color var(--t-fast) var(--ease-snap),opacity var(--t-micro) var(--ease-snap);
-  }
-  .btn-add:active,.btn-note:active,.chb:active,.stbtn:active{transform:scale(.97);transition-duration:80ms}
-  .ccard:active{transform:scale(.985)}   /* rows scale less than buttons */
-}
-
-@media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{
-    animation-duration:.001ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.001ms !important;
-    scroll-behavior:auto !important;
-  }
-  html{scroll-behavior:auto !important}
-  .rpanel{transform:none !important;opacity:1 !important}
-  .spin{animation:none !important;border-top-color:var(--color-accent)}
-  .fu,.fd1,.fd2,.fd3,.fd4{animation:none !important;opacity:1 !important;transform:none !important}
-  .ccard.enter,.scard,.rp-body .rp-sec,.rec-item{animation:none !important;opacity:1 !important;transform:none !important}
-  .rec-item.pending{opacity:.6 !important}
-  .sk::after{animation:none !important}
-  .sk{opacity:.6}
-  .tst{transition:none !important}
-  #cur{transition:none !important;display:none !important}
-  .btn-add:active,.btn-note:active,.chb:active,.stbtn:active,.ccard:active{transform:none !important}
-}
-
-/* ===== RESPONSIVE LAYER (additive; desktop >=1025px untouched) ===== */
-
-/* --- Tablet & below: slide-in drawer, document scroll, 2-col stats, 1-col add, 420px panel --- */
-@media (max-width:1024px){
-  /* prevent horizontal overflow on touch widths */
-  html,body{max-width:100%;overflow-x:hidden}
-  img,svg,object{max-width:100%}
-
-  /* hamburger (44x44 touch target), sits at start (right) in RTL */
-  .hamb{
-    display:flex;align-items:center;justify-content:center;
-    width:var(--hamb-size);height:var(--hamb-size);margin-right:calc(-1 * var(--space-5));
-    border:none;background:transparent;color:var(--color-text-primary);
-    border-radius:var(--radius-md);flex-shrink:0;
-  }
-  .hamb:hover{background:var(--color-surface-sunken)}
-
-  /* kill the 100vh overflow trap; let the document scroll with live viewport */
-  .shell{height:auto;min-height:100dvh;overflow:visible;display:block}
-  .main{overflow:visible}
-  .topbar{position:sticky;top:0;z-index:100}
-  .content{
-    overflow:visible;-webkit-overflow-scrolling:touch;
-    padding:var(--space-8);
-    padding-bottom:max(var(--space-8), env(safe-area-inset-bottom));
-  }
-
-  /* sidebar becomes a slide-in drawer anchored to the right (RTL) */
-  .sidebar{
-    position:fixed;top:0;right:0;bottom:0;
-    height:100dvh;z-index:var(--z-drawer);
-    transform:translateX(100%);
-    transition:transform var(--dur-drawer) var(--ease-standard);
-    box-shadow:none;
-  }
-  body.nav-open .sidebar{transform:translateX(0)}
-
-  .nav-scrim{
-    display:block;position:fixed;inset:0;z-index:var(--z-scrim);
-    background:var(--scrim-mobile);backdrop-filter:var(--scrim-mobile-blur);
-    opacity:0;visibility:hidden;transition:opacity var(--dur-drawer);
-  }
-  body.nav-open .nav-scrim{opacity:1;visibility:visible}
-
-  /* grids reflow */
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .add-layout{grid-template-columns:1fr}
-  .rpanel{width:var(--rpanel-w-tablet)}
-
-  /* long meta lines wrap instead of forcing horizontal scroll */
-  .rp-channels{flex-wrap:wrap}
-  .ci-meta{flex-wrap:wrap}
-
-  /* touch targets >=44px on touch widths (desktop sizes preserved) */
-  .nav-btn{padding:var(--space-6) var(--space-6);min-height:var(--touch-target)}
-  .chb{min-height:var(--touch-target-xl);padding:var(--space-5) var(--space-2)}
-  .stbtn{min-height:var(--touch-target)}
-  .btn-add{min-height:var(--touch-target-lg);padding:var(--space-13px)}
-  .btn-note,.btn-cls{min-height:var(--touch-target)}
-  .rp-x{width:var(--rp-x-touch);height:var(--rp-x-touch)}
-  .search-box input{padding-top:var(--space-13px);padding-bottom:var(--space-13px)}
-  .ccard{padding:var(--space-15px)}
-}
-
-/* --- Small tablet / large phone: channels 3-col, full-screen report panel --- */
-@media (max-width:768px){
-  .ch-grid{grid-template-columns:repeat(3,1fr)}
-  .rpanel{
-    width:100vw;width:100dvw;
-    height:100vh;height:100dvh;
-    border-right:none;
-  }
-  .rp-body{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-  .rp-ftr{padding-bottom:max(var(--space-6), env(safe-area-inset-bottom))}
-}
-
-/* --- Phone: stacked form rows, denser stat cards --- */
-@media (max-width:480px){
-  .frow{grid-template-columns:1fr}
-  .scard{padding:var(--space-6) var(--space-7)}
-  .scard-n{font-size:var(--text-2xl)}
-}
-
-/* --- Small phone: stats 1-col, channels 2-col --- */
-@media (max-width:360px){
-  .stats{grid-template-columns:1fr}
-  .ch-grid{grid-template-columns:repeat(2,1fr)}
-}
-
-/* --- Touch / coarse pointer: restore native cursor, hide custom dot, ensure pointers --- */
-@media (hover:none), (pointer:coarse){
-  body{cursor:auto}
-  #cur{display:none}
-  .nav-btn,.chb,.stbtn,.btn-add,.btn-note,.btn-cls,.rp-x,.ccard,.hamb{cursor:pointer}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0F111A">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://nidysxhagcfzjfdodsux.supabase.co wss://nidysxhagcfzjfdodsux.supabase.co https://siyaq-proxy.h-alqahtaniofficial.workers.dev; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+  <title>سياق</title>
+
+  <!-- Warm the connection to the data origin before the first query fires -->
+  <link rel="preconnect" href="https://nidysxhagcfzjfdodsux.supabase.co" crossorigin>
+
+  <!-- Preload the weights used above the fold so text paints without a swap flash -->
+  <link rel="preload" href="fonts/ThmanyahSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/ThmanyahSans-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/ThmanyahSans-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="js/vendor-supabase.min.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
 </head>
 <body>
-<div id="cur"></div>
-<a href="#main-content" class="skip-link">تخطّ إلى المحتوى</a>
-<h1 class="visually-hidden">سياق — وكيل التحليل</h1>
-<p id="page-status" class="visually-hidden" role="status" aria-live="polite"></p>
+  <div id="cur" aria-hidden="true"></div>
+  <a href="#main-content" class="skip-link">تخطّ إلى المحتوى</a>
+  <h1 class="visually-hidden">سياق - وكيل التحليل</h1>
+  <p id="page-status" class="visually-hidden" role="status" aria-live="polite"></p>
 
-<div class="shell">
+  <div class="shell" id="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="الشريط الجانبي" tabindex="-1">
+      <div class="sb-top">
+        <div class="sb-logo sb-logo-spacious">
+          <svg width="38" height="48" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <defs>
+              <filter id="glow-logo" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <linearGradient id="grad1-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38BDF8" />
+                  <stop offset="100%" stop-color="#1E2236" />
+              </linearGradient>
+              <linearGradient id="grad2-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4F8EF7" />
+                  <stop offset="100%" stop-color="#1E2236" />
+              </linearGradient>
+              <linearGradient id="grad3-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#A78BFA" />
+                  <stop offset="100%" stop-color="#1E2236" />
+              </linearGradient>
+            </defs>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar" tabindex="-1">
-    <div class="sb-top">
-      <div class="sb-logo" style="gap:12px">
-        <object data="Logo.svg" type="image/svg+xml" width="38" height="47.5" style="pointer-events:none" aria-hidden="true">
-          <!-- Fallback for browsers that don't support object tag -->
-          <img src="Logo.svg" alt="" width="38" height="47.5" />
-        </object>
-        <div>
-          <span class="sb-brand-name">سياق</span>
-          <div class="sb-sub">ذكاء تفاعلات العملاء</div>
+            <path class="s-path" d="M 140 40 C 140 0, 20 0, 20 50 C 20 100, 140 100, 140 150 C 140 200, 20 200, 20 160" fill="none" stroke="url(#grad1-logo)" stroke-width="14" stroke-linecap="round" />
+            <path class="s-path" d="M 115 50 C 115 20, 45 20, 45 60 C 45 100, 115 100, 115 140 C 115 180, 45 180, 45 150" fill="none" stroke="url(#grad2-logo)" stroke-width="14" stroke-linecap="round" />
+            <path class="s-path" d="M 90 60 C 90 40, 70 40, 70 70 C 70 100, 90 100, 90 130 C 90 160, 70 160, 70 140" fill="none" stroke="url(#grad3-logo)" stroke-width="14" stroke-linecap="round" />
+
+            <g class="central-core">
+                <circle cx="80" cy="100" r="14" fill="none" stroke="#38BDF8" class="central-pulse" />
+                <circle cx="80" cy="100" r="10" fill="#ffffff" filter="url(#glow-logo)" />
+                <circle cx="80" cy="100" r="4.5" fill="#4F8EF7" />
+            </g>
+          </svg>
+          <div>
+            <span class="sb-brand-name">سياق</span>
+            <div class="sb-sub">ذكاء تفاعلات العملاء</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <nav class="sb-nav" aria-label="التنقل الرئيسي">
-      <div class="sb-sec-label">الرئيسية</div>
-      <button type="button" class="nav-btn active" id="nav-agent" aria-current="page" onclick="goPage('agent')">
-        <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
-        وكيل التحليل
-      </button>
-      <button type="button" class="nav-btn" id="nav-add" onclick="goPage('add')">
-        <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
-        إضافة للقاعدة
-      </button>
+      <nav class="sb-nav" aria-label="التنقل الرئيسي">
+        <div class="sb-sec-label">الرئيسية</div>
+        <button type="button" class="nav-btn active" id="nav-agent" aria-current="page">
+          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          وكيل التحليل
+        </button>
+        <button type="button" class="nav-btn" id="nav-add">
+          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+          إضافة للقاعدة
+        </button>
 
-      <div class="sb-sec-label" style="margin-top:var(--space-5)">القنوات</div>
-      <div class="sb-channels">
-        <div class="ch-row"><div class="ch-left"><div class="ch-dot" style="background:var(--channel-phone)"></div><span>هاتف</span></div><span id="cnt-phone" style="font-weight:var(--weight-medium)">0</span></div>
-        <div class="ch-row"><div class="ch-left"><div class="ch-dot" style="background:var(--channel-whatsapp)"></div><span>واتساب</span></div><span id="cnt-wa" style="font-weight:var(--weight-medium)">0</span></div>
-        <div class="ch-row"><div class="ch-left"><div class="ch-dot" style="background:var(--channel-branch)"></div><span>فرع</span></div><span id="cnt-br" style="font-weight:var(--weight-medium)">0</span></div>
-        <div class="ch-row"><div class="ch-left"><div class="ch-dot" style="background:var(--channel-twitter)"></div><span>تويتر</span></div><span id="cnt-tw" style="font-weight:var(--weight-medium)">0</span></div>
-        <div class="ch-row"><div class="ch-left"><div class="ch-dot" style="background:var(--channel-email)"></div><span>بريد</span></div><span id="cnt-em" style="font-weight:var(--weight-medium)">0</span></div>
-      </div>
-    </nav>
-
-    <div class="sb-footer">
-      <div class="sb-kpi"><span class="sb-kpi-l">إجمالي العملاء</span><span class="sb-kpi-v" id="sb-tot">0</span></div>
-      <div class="sb-kpi"><span class="sb-kpi-l">غير محلولة</span><span class="sb-kpi-v" style="color:var(--color-warning)" id="sb-unres">0</span></div>
-    </div>
-  </aside>
-  <div class="nav-scrim" id="navScrim" aria-hidden="true" onclick="toggleNav()"></div>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <button type="button" class="hamb" id="hamb" aria-label="القائمة" aria-expanded="false" aria-controls="sidebar" onclick="toggleNav()">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12" stroke-linecap="round"/></svg>
-      </button>
-      <span class="topbar-title" id="tb-title">وكيل التحليل</span>
-      <div class="topbar-r">
-        <span class="api-badge">Claude API نشط</span>
-      </div>
-    </div>
-
-    <div class="content" id="main-content" role="main" tabindex="-1">
-
-      <!-- AGENT PAGE -->
-      <div class="page active" id="page-agent">
-        <div class="stats fu fd1" id="stats-row">
-          <div class="scard bl"><div class="scard-n" id="s-tot">0</div><div class="scard-l">إجمالي العملاء</div></div>
-          <div class="scard am"><div class="scard-n" id="s-unres">0</div><div class="scard-l">مشكلات غير محلولة</div></div>
-          <div class="scard gr"><div class="scard-n" id="s-res">0</div><div class="scard-l">محلولة</div></div>
-          <div class="scard re"><div class="scard-n" id="s-int">0</div><div class="scard-l">إجمالي التفاعلات</div></div>
+        <div class="sb-sec-label sb-sec-label-spaced">القنوات</div>
+        <div class="sb-channels">
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-phone"></span><span>هاتف</span></div><span class="channel-count" id="cnt-phone">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-whatsapp"></span><span>واتساب</span></div><span class="channel-count" id="cnt-wa">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-branch"></span><span>فرع</span></div><span class="channel-count" id="cnt-br">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-twitter"></span><span>تويتر</span></div><span class="channel-count" id="cnt-tw">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-email"></span><span>بريد</span></div><span class="channel-count" id="cnt-em">0</span></div>
         </div>
+      </nav>
 
-        <div class="search-box fu fd2">
-          <svg class="search-ico" aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          <input type="text" id="search-in" aria-label="ابحث بالاسم أو رقم الهاتف أو المعرف" placeholder="ابحث بالاسم أو رقم الهاتف أو المعرف..." oninput="filterList()"/>
-        </div>
-
-        <div class="list-hdr fu fd3">
-          <span class="list-hdr-t">جميع العملاء</span>
-          <span class="list-hdr-m" id="list-cnt">0 سجلات</span>
-        </div>
-        <div class="clist fu fd4" id="clist"></div>
+      <div class="sb-footer">
+        <div class="sb-kpi"><span class="sb-kpi-l">إجمالي العملاء</span><span class="sb-kpi-v" id="sb-tot">0</span></div>
+        <div class="sb-kpi"><span class="sb-kpi-l">غير محلولة</span><span class="sb-kpi-v sb-kpi-warning" id="sb-unres">0</span></div>
       </div>
+    </aside>
+    <div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
 
-      <!-- ADD PAGE -->
-      <div class="page" id="page-add">
-        <div class="add-layout">
-          <div class="fcard fu fd1">
-            <h2 class="fcard-title">تسجيل تفاعل جديد</h2>
-            <div class="fcard-sub">أضف تفاعل عميل من أي قناة إلى قاعدة البيانات.</div>
+    <div class="main">
+      <header class="topbar">
+        <button type="button" class="hamb" id="hamb" aria-label="القائمة" aria-expanded="false" aria-controls="sidebar">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12" stroke-linecap="round"/></svg>
+        </button>
+        <span class="topbar-title" id="tb-title">وكيل التحليل</span>
+        <div class="topbar-r">
+          <span class="api-badge">Claude API نشط</span>
+        </div>
+      </header>
 
-            <div class="frow">
+      <main class="content" id="main-content" tabindex="-1">
+        <section class="page active" id="page-agent" aria-labelledby="agent-heading">
+          <h2 class="visually-hidden" id="agent-heading">وكيل التحليل</h2>
+          <div class="kpi fu fd1" id="stats-row">
+            <div class="kpi-hero">
+              <span class="kpi-n" id="s-unres">0</span>
+              <span class="kpi-lab">مشكلة <b>غير محلولة</b></span>
+            </div>
+            <div class="kpi-sub">
+              <span class="kpi-it"><span class="kpi-d kpi-d-violet" aria-hidden="true"></span><b id="s-int">0</b> تفاعل</span>
+              <span class="kpi-it"><span class="kpi-d kpi-d-green" aria-hidden="true"></span><b id="s-res">0</b> محلولة</span>
+              <span class="kpi-it"><span class="kpi-d kpi-d-blue" aria-hidden="true"></span><b id="s-tot">0</b> عملاء</span>
+            </div>
+          </div>
+
+          <div class="search-box fu fd2">
+            <svg class="search-ico" aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input type="search" id="search-in" aria-label="ابحث بالاسم أو رقم الهاتف أو المعرف" placeholder="ابحث بالاسم أو رقم الهاتف أو المعرف..." autocomplete="off">
+          </div>
+
+          <div class="list-hdr fu fd3">
+            <span class="list-hdr-t">جميع العملاء</span>
+            <span class="list-hdr-m" id="list-cnt">0 سجلات</span>
+          </div>
+          <div class="clist fu fd4" id="clist"></div>
+        </section>
+
+        <section class="page" id="page-add" aria-labelledby="add-heading">
+          <div class="add-layout">
+            <div class="fcard fu fd1">
+              <h2 class="fcard-title" id="add-heading">تسجيل تفاعل جديد</h2>
+              <div class="fcard-sub">أضف تفاعل عميل من أي قناة إلى قاعدة البيانات.</div>
+
               <div class="fg">
                 <label class="fl" for="f-name">اسم العميل</label>
-                <input class="fi" type="text" id="f-name" placeholder="أحمد الزهراني" required aria-required="true"/>
+                <input class="fi fi-hero" type="text" id="f-name" name="customer-name" placeholder="أحمد الزهراني" autocomplete="name" required>
               </div>
               <div class="fg">
                 <label class="fl" for="f-phone">الهاتف / المعرف</label>
-                <input class="fi" type="text" id="f-phone" placeholder="0512345678" required aria-required="true"/>
+                <input class="fi" type="tel" id="f-phone" name="customer-phone" placeholder="0512345678" autocomplete="tel" inputmode="tel" dir="ltr" required>
               </div>
-            </div>
 
-            <div class="fg" role="radiogroup" aria-labelledby="ch-grp-lbl">
-              <span class="fl" id="ch-grp-lbl">القناة</span>
-              <div class="ch-grid">
-                <button type="button" class="chb sel" id="chb-phone" role="radio" aria-checked="true" tabindex="0" onclick="setCh('phone')">
-                  <div class="chb-ico" style="background:var(--color-accent-subtle-2);color:var(--channel-phone-chip)">
-                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h1a1.5 1.5 0 011.5 1.5v1A1.5 1.5 0 015.5 6H5a7 7 0 005.5 5.5v-.5A1.5 1.5 0 0112 9.5h1A1.5 1.5 0 0114.5 11v1A1.5 1.5 0 0113 13.5C7.201 13.5 2.5 8.799 2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                  </div>
-                  <span class="chb-lbl">هاتف</span>
-                </button>
-                <button type="button" class="chb" id="chb-whatsapp" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('whatsapp')">
-                  <div class="chb-ico" style="background:var(--color-success-subtle-2);color:var(--channel-whatsapp-chip)">
-                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 8.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                  </div>
-                  <span class="chb-lbl">واتساب</span>
-                </button>
-                <button type="button" class="chb" id="chb-branch" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('branch')">
-                  <div class="chb-ico" style="background:var(--color-violet-subtle-2);color:var(--channel-branch-chip)">
-                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 13.5V6.5l4.5-4 4.5 4v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="9.5" width="4" height="4" rx=".5" stroke="currentColor" stroke-width="1.3"/></svg>
-                  </div>
-                  <span class="chb-lbl">فرع</span>
-                </button>
-                <button type="button" class="chb" id="chb-twitter" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('twitter')">
-                  <div class="chb-ico" style="background:var(--color-info-subtle-2);color:var(--channel-twitter-chip)">
-                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5L6.5 8l-4-5.5h3l2.5 3.5 3-3.5h2.5L9.5 7.5 14 13H11l-2.5-3.5L5.5 13H2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-                  </div>
-                  <span class="chb-lbl">تويتر</span>
-                </button>
-                <button type="button" class="chb" id="chb-email" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('email')">
-                  <div class="chb-ico" style="background:var(--color-amber-true-subtle);color:var(--channel-email-chip)">
-                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 4.5l5.5 4 5.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-                  </div>
-                  <span class="chb-lbl">بريد</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="fg" id="email-field" style="display:none">
-              <label class="fl" for="f-email">البريد الإلكتروني</label>
-              <input class="fi" type="email" id="f-email" placeholder="example@email.com" dir="ltr"/>
-            </div>
-
-            <div class="frow">
-              <div class="fg">
-                <label class="fl" for="f-date">التاريخ</label>
-                <input class="fi" type="date" id="f-date" required aria-required="true"/>
-              </div>
-              <div class="fg" role="radiogroup" aria-labelledby="st-grp-lbl">
-                <span class="fl" id="st-grp-lbl">الحالة</span>
-                <div class="strow">
-                  <button type="button" class="stbtn sel-u" id="st-u" role="radio" aria-checked="true" tabindex="0" onclick="setSt('unresolved')">
-                    <span aria-hidden="true" style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-warning);display:inline-block"></span>
-                    غير محلولة
-                  </button>
-                  <button type="button" class="stbtn" id="st-r" role="radio" aria-checked="false" tabindex="-1" onclick="setSt('resolved')">
-                    <span aria-hidden="true" style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-success);display:inline-block"></span>
-                    محلولة
-                  </button>
+              <div class="fg" role="radiogroup" aria-labelledby="ch-grp-lbl">
+                <span class="fl" id="ch-grp-lbl">القناة</span>
+                <div class="ch-grid">
+                  <button type="button" class="chb sel" id="chb-phone" role="radio" aria-checked="true" tabindex="0"><span class="chb-ico chb-ico-phone"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h1a1.5 1.5 0 011.5 1.5v1A1.5 1.5 0 015.5 6H5a7 7 0 005.5 5.5v-.5A1.5 1.5 0 0112 9.5h1A1.5 1.5 0 0114.5 11v1A1.5 1.5 0 0113 13.5C7.201 13.5 2.5 8.799 2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="chb-lbl">هاتف</span></button>
+                  <button type="button" class="chb" id="chb-whatsapp" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-whatsapp"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 8.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="chb-lbl">واتساب</span></button>
+                  <button type="button" class="chb" id="chb-branch" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-branch"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 13.5V6.5l4.5-4 4.5 4v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="9.5" width="4" height="4" rx=".5" stroke="currentColor" stroke-width="1.3"/></svg></span><span class="chb-lbl">فرع</span></button>
+                  <button type="button" class="chb" id="chb-twitter" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-twitter"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5L6.5 8l-4-5.5h3l2.5 3.5 3-3.5h2.5L9.5 7.5 14 13H11l-2.5-3.5L5.5 13H2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span><span class="chb-lbl">تويتر</span></button>
+                  <button type="button" class="chb" id="chb-email" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-email"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 4.5l5.5 4 5.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="chb-lbl">بريد</span></button>
                 </div>
               </div>
-            </div>
 
-            <div class="fg">
-              <label class="fl" for="f-summary">ملخص</label>
-              <textarea class="fi" id="f-summary" placeholder="وصف مختصر لسبب التواصل وما تم..." required aria-required="true"></textarea>
-            </div>
-
-            <div class="fdiv"></div>
-            <button type="button" class="btn-add" onclick="addInt()">
-              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
-              إضافة التفاعل
-            </button>
-            <p id="f-error" class="visually-hidden" role="alert"></p>
-            <div class="tst" id="tst" role="status" aria-live="polite">
-              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#2DD4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span class="tst-text">تمت الإضافة بنجاح.</span>
-            </div>
-            <div class="tst tst-err" id="tst-err" role="alert" aria-live="assertive">
-              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 4v5M8 11.5v.5" stroke="#F56565" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="#F56565" stroke-width="1.4"/></svg>
-              <span class="tst-err-text">تعذر حفظ التفاعل. حاول مرة أخرى.</span>
-            </div>
-          </div>
-
-          <div class="rcard fu fd2">
-            <h2 class="rcard-title">آخر الإضافات</h2>
-            <div class="rec-list" id="rec-list">
-              <div style="font-size:var(--text-sm);color:var(--color-text-tertiary);padding:var(--space-3)">لا توجد إضافات حديثة.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- REPORT PANEL -->
-<div class="backdrop" id="backdrop" onclick="if(event.target===this)closeReport()">
-  <div class="rpanel" role="dialog" aria-modal="true" aria-labelledby="rp-name" aria-describedby="rp-meta" tabindex="-1">
-    <p id="rp-status" class="visually-hidden" role="status" aria-live="polite"></p>
-    <div class="rp-hdr">
-      <div class="rp-top">
-        <div class="rp-cust">
-          <div class="rp-av" id="rp-av" aria-hidden="true">AZ</div>
-          <div>
-            <h2 class="rp-name" id="rp-name">أحمد الزهراني</h2>
-            <div class="rp-meta" id="rp-meta">4 تفاعلات</div>
-          </div>
-        </div>
-        <button type="button" class="rp-x" aria-label="إغلاق التقرير" onclick="closeReport()">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-      <div class="rp-channels" id="rp-channels"></div>
-    </div>
-
-    <div class="rp-body" id="rp-body">
-      <div class="gen-state" role="status" aria-busy="true">
-        <div class="spin" aria-hidden="true"></div>
-        <div class="gen-txt">جاري تحليل ملف العميل...</div>
-        <div class="gen-steps" aria-hidden="true">
-          <div class="gs" id="gs1"><div class="gs-dot"></div>مراجعة التفاعلات السابقة</div>
-          <div class="gs" id="gs2"><div class="gs-dot"></div>تحديد المشكلات المفتوحة</div>
-          <div class="gs" id="gs3"><div class="gs-dot"></div>التنبؤ بسبب التواصل الحالي</div>
-          <div class="gs" id="gs4"><div class="gs-dot"></div>إعداد التوصيات</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rp-ftr">
-      <button type="button" class="btn-note" onclick="addNote()">
-        <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        إضافة تفاعل جديد
-      </button>
-      <button type="button" class="btn-cls" onclick="closeReport()">إغلاق</button>
-    </div>
-  </div>
-</div>
-
-  
-                                                                                <!--This is the Backend Part of the code-->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = 'https://nidysxhagcfzjfdodsux.supabase.co'
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pZHlzeGhhZ2NmempmZG9kc3V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNzQzNjUsImV4cCI6MjA5NDk1MDM2NX0.tFmk2EFlT0_mMyizmovHBL_1iqBdKlKJYUr0G2r8Raw'
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-                                                                              //End of backend part connecting to supabase
-
-  
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-if (fine && !reduceMotion) {
-  // P0-4: rAF-coalesced, transform-only custom cursor (no layout writes per mousemove)
-  const cur = document.getElementById('cur');
-  let cx = 0, cy = 0, raf = null;
-  const draw = () => { cur.style.transform = `translate3d(${cx}px,${cy}px,0) translate(-50%,-50%)`; raf = null; };
-  document.addEventListener('mousemove', e => {
-    cx = e.clientX; cy = e.clientY;
-    if (raf === null) raf = requestAnimationFrame(draw);
-  }, { passive: true });
-  document.addEventListener('mouseover', e => {
-    cur.classList.toggle('big', !!e.target.closest('button, .ccard'));
-  });
-} else {
-  document.body.style.cursor = 'auto';
-}
-
-// Single source of truth for brand/mood hexes — mirrors the --channel-*-chip and
-// status tokens in :root. (Centralized; was previously duplicated across CH_COLORS + aiSummaryCard.)
-const PALETTE = {
-  accent:'#4F8EF7', success:'#2DD4A0', violet:'#A78BFA', info:'#38BDF8',
-  amber:'#F5A623', warning:'#FF6B6B'
-};
-const CH_COLORS = { phone:PALETTE.accent, whatsapp:PALETTE.success, branch:PALETTE.violet, twitter:PALETTE.info, email:PALETTE.amber };
-const CH_FALLBACK = '#888';
-const CH_LABELS = { phone:'هاتف', whatsapp:'واتساب', branch:'فرع', twitter:'تويتر', email:'بريد' };
-
-let DB = [];
-
-let selCh = 'phone', selSt = 'unresolved', curCust = null;
-
-function goPage(p) {
-  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  document.getElementById('nav-'+p).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(x => x.removeAttribute('aria-current'));
-  document.getElementById('nav-'+p).setAttribute('aria-current','page');
-  const title = p === 'agent' ? 'وكيل التحليل' : 'إضافة للقاعدة';
-  document.getElementById('tb-title').textContent = title;
-  // announce + move focus to the swapped-in main content (sensible focus management)
-  document.getElementById('page-status').textContent = title;
-  const main = document.getElementById('main-content');
-  if (!main.hasAttribute('inert')) main.focus({ preventScroll: false });
-}
-
-// mobile slide-in drawer (preserves all nav ids/handlers)
-// keyboard parity with layer 2: focus trap + inert background while open
-function onDrawerKeydown(e){
-  if (e.key === 'Escape') { closeNav(); return; }
-  if (e.key === 'Tab') {
-    const f = getFocusable(document.getElementById('sidebar'));
-    if (!f.length) return;
-    const first = f[0], last = f[f.length-1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  }
-}
-function openNav(){
-  document.body.classList.add('nav-open');
-  document.getElementById('hamb').setAttribute('aria-expanded','true');
-  const sb = document.getElementById('sidebar');
-  sb.setAttribute('role','dialog'); sb.setAttribute('aria-modal','true');
-  const main = document.getElementById('main-content');
-  main.setAttribute('inert',''); main.setAttribute('aria-hidden','true');
-  document.addEventListener('keydown', onDrawerKeydown);
-  const f = getFocusable(sb);
-  (f[0] || sb).focus();
-}
-function closeNav(){
-  if (!document.body.classList.contains('nav-open')) return;
-  document.body.classList.remove('nav-open');
-  document.getElementById('hamb').setAttribute('aria-expanded','false');
-  const sb = document.getElementById('sidebar');
-  sb.removeAttribute('role'); sb.removeAttribute('aria-modal');
-  const main = document.getElementById('main-content');
-  main.removeAttribute('inert'); main.removeAttribute('aria-hidden');
-  document.removeEventListener('keydown', onDrawerKeydown);
-  document.getElementById('hamb').focus();
-}
-function toggleNav(){
-  if (document.body.classList.contains('nav-open')) closeNav(); else openNav();
-}
-// force-close drawer when leaving the mobile range so .main can't stay inert/aria-hidden
-const mqDesktop = window.matchMedia('(min-width:1025px)');
-mqDesktop.addEventListener('change', e => { if (e.matches) closeNav(); });
-// auto-close drawer after navigating so goPage handlers fire untouched
-document.querySelectorAll('.sb-nav .nav-btn').forEach(b =>
-  b.addEventListener('click', () => closeNav()));
-
-function chColor(ch){ return CH_COLORS[ch] || CH_FALLBACK; }
-function chLabel(ch){ return CH_LABELS[ch] || ch; }
-function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-function renderTimeline(c) {
-  return `<div class="tl">
-        ${c.ints.map(it => {
-          const ch = it.ch || it.channel;
-          const col = chColor(ch);
-          const st = it.st || it.status;
-          return `
-          <div class="tl-item">
-            <div class="tl-l">
-              <div class="tl-ico" aria-hidden="true" style="background:${col}18;color:${col}">
-                <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
+              <div class="fg is-hidden" id="email-field">
+                <label class="fl" for="f-email">البريد الإلكتروني</label>
+                <input class="fi" type="email" id="f-email" name="interaction-email" placeholder="example@email.com" autocomplete="email" inputmode="email" dir="ltr">
               </div>
-              <div class="tl-line"></div>
-            </div>
-            <div class="tl-c">
-              <div class="tl-meta"><span style="color:${col};font-weight:var(--weight-medium)">${esc(chLabel(ch))}</span><span>${esc(it.date)}</span></div>
-              <div class="tl-txt">${esc(it.sum||it.summary)}</div>
-              <div class="tl-bdg"><span class="badge ${st==='unresolved'?'b-amber':'b-green'}">${st==='unresolved'?'غير محلولة':'محلولة'}</span></div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>`;
-}
 
-function aiSummaryCard(c) {
-  if (!c.ints || !c.ints.length) return '';
-  const unres = c.ints.filter(i => (i.st||i.status) === 'unresolved').length;
-  const total = c.ints.length;
-  const ratio = unres / total;
-  let s;
-  if (unres === 0) s = { mood: 'راضٍ', moodScore: 15, moodColor: PALETTE.success, classification: 'استفسار عام', prediction: 'لا مشكلات مفتوحة', icon: '✓' };
-  else if (ratio >= 0.75) s = { mood: 'غاضب جداً', moodScore: Math.min(95, 60+unres*8), moodColor: PALETTE.warning, classification: 'مشكلة متكررة غير محلولة', prediction: 'تصعيد محتمل إذا لم يُحل في هذا التفاعل', icon: '⚠' };
-  else if (ratio >= 0.4) s = { mood: 'محبط', moodScore: Math.min(75, 40+unres*7), moodColor: PALETTE.amber, classification: 'مشكلة متكررة', prediction: 'يتوقع حلاً سريعاً هذه المرة', icon: '↻' };
-  else s = { mood: 'مستفسر', moodScore: 30, moodColor: PALETTE.accent, classification: 'استفسار', prediction: 'يحتاج توضيحاً أو متابعة', icon: '?' };
-  return `<div class="ai-card">
-    <div class="ai-card-header">
-      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 7l-3.5 1.5L8 12l-1.5-3.5L3 7l3.5-1.5z" fill="${PALETTE.accent}"/></svg>
-      <span>المساعد الذكي</span>
+              <div class="frow">
+                <div class="fg">
+                  <label class="fl" for="f-date">التاريخ</label>
+                  <input class="fi" type="date" id="f-date" name="interaction-date" required>
+                </div>
+                <div class="fg" role="radiogroup" aria-labelledby="st-grp-lbl">
+                  <span class="fl" id="st-grp-lbl">الحالة</span>
+                  <div class="strow">
+                    <button type="button" class="stbtn sel-u" id="st-u" role="radio" aria-checked="true" tabindex="0">غير محلولة</button>
+                    <button type="button" class="stbtn" id="st-r" role="radio" aria-checked="false" tabindex="-1">محلولة</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="fg">
+                <label class="fl" for="f-summary">ملخص</label>
+                <textarea class="fi" id="f-summary" name="interaction-summary" placeholder="وصف مختصر لسبب التواصل وما تم..." required></textarea>
+              </div>
+
+              <button type="button" class="btn-add" data-state="idle">
+                <span class="btn-add-idle">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                  إضافة التفاعل
+                </span>
+                <span class="btn-add-saving" aria-hidden="true">
+                  <span class="btn-spin"></span>
+                  جارٍ الحفظ…
+                </span>
+                <span class="btn-add-done" aria-hidden="true">
+                  <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  تمت الإضافة
+                </span>
+              </button>
+              <p id="f-error" class="visually-hidden" role="alert"></p>
+              <p id="tst" class="visually-hidden" role="status" aria-live="polite"><span class="tst-text"></span></p>
+              <div class="tst-err" id="tst-err" role="alert" aria-live="assertive">
+                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 4v5M8 11.5v.5" stroke="#F56565" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="#F56565" stroke-width="1.4"/></svg>
+                <span class="tst-err-text">تعذر حفظ التفاعل. حاول مرة أخرى.</span>
+              </div>
+            </div>
+
+            <aside class="rcard fu fd2" aria-labelledby="recent-heading">
+              <h2 class="rcard-title" id="recent-heading">آخر الإضافات</h2>
+              <div class="rec-list" id="rec-list">
+                <div class="empty-placeholder">لا توجد إضافات حديثة.</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </main>
     </div>
-    <div class="ai-card-body">
-      <div class="ai-mood-row">
-        <span class="ai-mood-badge" style="border-color:${s.moodColor}33;color:${s.moodColor};background:${s.moodColor}15"><span aria-hidden="true">${s.icon}</span> تحليل المشاعر: ${esc(s.mood)} (${s.moodScore}%)</span>
+  </div>
+
+  <div class="backdrop" id="backdrop">
+    <div class="rpanel" role="dialog" aria-modal="true" aria-labelledby="rp-name" aria-describedby="rp-meta" tabindex="-1">
+      <p id="rp-status" class="visually-hidden" role="status" aria-live="polite"></p>
+      <div class="rp-hdr">
+        <div class="rp-top">
+          <div class="rp-cust">
+            <div class="rp-av" id="rp-av" aria-hidden="true">AZ</div>
+            <div>
+              <h2 class="rp-name" id="rp-name">أحمد الزهراني</h2>
+              <div class="rp-meta" id="rp-meta">4 تفاعلات</div>
+            </div>
+          </div>
+          <button type="button" class="rp-x" aria-label="إغلاق التقرير">
+            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="rp-channels" id="rp-channels"></div>
       </div>
-      <div class="ai-classify">التصنيف: ${esc(s.classification)}</div>
-      <div class="ai-pred">${esc(s.prediction)}</div>
-    </div>
-  </div>`;
-}
 
-// markup for one customer row (.ccard) + its AI summary card
-function cardMarkup(c) {
-  const unres = c.ints.filter(i => (i.st||i.status) === 'unresolved').length;
-  const last = c.ints[c.ints.length-1];
-  const channels = [...new Set(c.ints.map(i => i.ch||i.channel))];
-  const cardLbl = esc(`عرض تقرير ${c.name}، ${c.ints.length} تفاعلات${unres>0 ? '، '+unres+' غير محلولة' : ''}`);
-  return `<div class="ccard" role="button" tabindex="0" aria-label="${cardLbl}" data-id="${esc(c.id)}">
-      <div class="av" aria-hidden="true">${esc(c.init)}</div>
-      <div>
-        <div class="ci-name">${esc(c.name)}</div>
-        <div class="ci-meta">
-          <span>${esc(c.phone)}</span>
-          <span style="color:var(--color-border-strong)">|</span>
-          <span>${c.ints.length} تفاعلات</span>
-          <span style="color:var(--color-border-strong)">|</span>
-          <span>آخر تواصل: ${esc(last.date)}</span>
-          <span aria-hidden="true" style="display:flex;gap:var(--space-3px);align-items:center;margin-right:var(--space-2)">
-            ${channels.map(ch => `<span style="width:6px;height:6px;border-radius:var(--radius-full);background:${chColor(ch)};display:inline-block"></span>`).join('')}
-          </span>
+      <div class="rp-body" id="rp-body">
+        <div class="gen-state" role="status" aria-busy="true">
+          <div class="spin" aria-hidden="true"></div>
+          <div class="gen-txt">جاري تحليل ملف العميل...</div>
         </div>
       </div>
-      <span class="badge ${unres > 0 ? 'b-amber' : 'b-green'}">${unres > 0 ? unres + ' غير محلولة' : 'جميعها محلولة'}</span>
-      <svg aria-hidden="true" class="ccard-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    ${aiSummaryCard(c)}`;
-}
 
-// P0-5: build rows ONCE; cache each row el + a precomputed search haystack so filter
-// toggles visibility instead of re-running innerHTML/normalizeAr per keystroke.
-let rowIndex = [];
-function renderList(list) {
-  const el = document.getElementById('clist');
-  rowIndex = [];
-  const rows = list.filter(c => c.ints && c.ints.length);
-  document.getElementById('list-cnt').textContent = rows.length + ' سجلات';
-  if (!rows.length) { showListEmpty(); return; }
-  el.innerHTML = rows.map(c =>
-    `<div class="row-wrap">${cardMarkup(c)}</div>`
-  ).join('');
-  const wraps = el.querySelectorAll('.row-wrap');
-  rows.forEach((c, idx) => {
-    const wrap = wraps[idx];
-    rowIndex.push({
-      wrap,
-      phone: c.phone,
-      // haystack computed at render time, not per keystroke
-      hay: (normalizeAr(c.name) + ' ' + arToLatin(c.name) + ' ' + c.id.toLowerCase()).toLowerCase()
-    });
-    // P0-8: capped, settled-set stagger; cleared after the run so later ops don't re-stagger
-    const card = wrap.querySelector('.ccard');
-    if (card && !reduceMotion) {
-      card.classList.add('enter');
-      card.style.animationDelay = (Math.min(idx, 9) * 50) + 'ms';
-      card.addEventListener('animationend', () => {
-        card.classList.remove('enter'); card.style.animationDelay = '';
-      }, { once: true });
-    }
-  });
-}
-
-function showListEmpty() {
-  const el = document.getElementById('clist');
-  // distinguish no-data (no customers) from no-match (filtered everything out)
-  if (DB.some(c => c.ints && c.ints.length)) {
-    const raw = esc(document.getElementById('search-in').value.trim());
-    el.innerHTML = `<div class="empty">
-      <div class="empty-t">لا توجد نتائج</div>
-      <div class="empty-s">جرّب كلمة مختلفة أو امسح البحث.</div>
-      <button type="button" class="empty-act" onclick="clearSearch()">مسح البحث</button>
-    </div>`;
-  } else {
-    el.innerHTML = `<div class="empty">
-      <div class="empty-t">لا توجد سجلات بعد</div>
-      <div class="empty-s">ابدأ بتسجيل أول تفاعل في قاعدة البيانات.</div>
-      <button type="button" class="empty-act" onclick="goPage('add')">أضف أول تفاعل</button>
-    </div>`;
-  }
-}
-function clearSearch() {
-  const inp = document.getElementById('search-in');
-  inp.value = ''; runFilter(); inp.focus();
-}
-
-function normalizeAr(s) {
-  return s
-    .replace(/[أإآا]/g, 'ا')
-    .replace(/[ةه]/g, 'ه')
-    .replace(/[يى]/g, 'ي')
-    .toLowerCase();
-}
-// Transliterate Arabic to rough Latin for English search
-function arToLatin(s) {
-  const map = {'ا':'a','أ':'a','إ':'a','آ':'a','ب':'b','ت':'t','ث':'th','ج':'j','ح':'h','خ':'kh','د':'d','ذ':'dh','ر':'r','ز':'z','س':'s','ش':'sh','ص':'s','ض':'d','ط':'t','ظ':'z','ع':'a','غ':'gh','ف':'f','ق':'q','ك':'k','ل':'l','م':'m','ن':'n','ه':'h','ة':'h','و':'w','ي':'y','ى':'a',' ':' '};
-  return s.split('').map(c => map[c] || c).join('').toLowerCase();
-}
-// P0-5: `filterList` (the inline oninput handler) now just debounces; `runFilter`
-// does the work by toggling row visibility against the precomputed haystacks.
-let _filterTimer;
-function filterList() { clearTimeout(_filterTimer); _filterTimer = setTimeout(runFilter, 250); }
-function runFilter() {
-  if (!DB.length) return;
-  const el = document.getElementById('clist');
-  // if the empty-state node replaced the cached rows, rebuild them before filtering
-  if (!rowIndex.length || !el.querySelector('.row-wrap')) renderList(DB);
-  if (!rowIndex.length) return;
-  const raw = document.getElementById('search-in').value.trim();
-  const q = normalizeAr(raw).toLowerCase();
-  const qLat = raw.toLowerCase();
-  let shown = 0;
-  for (const { wrap, hay, phone } of rowIndex) {
-    const match = !raw || hay.includes(q) || hay.includes(qLat) || phone.includes(raw);
-    wrap.hidden = !match;
-    if (match) shown++;
-  }
-  document.getElementById('list-cnt').textContent = shown + ' سجلات';
-  if (!shown) showListEmpty();
-}
-
-// P0-7: rAF count-up (easeOutExpo) for the 4 main stat cards; snaps under reduced-motion.
-function countUp(el, to, dur = 1100) {
-  if (reduceMotion) { el.textContent = to.toLocaleString('ar-EG'); return; }
-  const from = +String(el.textContent).replace(/[^\d]/g, '') || 0;
-  if (from === to) { el.textContent = to.toLocaleString('ar-EG'); return; }
-  const t0 = performance.now();
-  const ease = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-  (function f(now) {
-    const p = Math.min((now - t0) / dur, 1);
-    el.textContent = Math.round(from + (to - from) * ease(p)).toLocaleString('ar-EG');
-    if (p < 1) requestAnimationFrame(f);
-  })(t0);
-}
-
-let _statsAnimated = false;
-function updateStats() {
-  const allInts = DB.flatMap(c => c.ints);
-  const tot = DB.length;
-  const unres = allInts.filter(i => (i.st || i.status) === 'unresolved').length;
-  const res = allInts.filter(i => (i.st || i.status) === 'resolved').length;
-  const intTot = allInts.length;
-  // count-up only on the first real data load; later updates set directly (no distraction)
-  if (!_statsAnimated) {
-    _statsAnimated = true;
-    countUp(document.getElementById('s-tot'), tot);
-    countUp(document.getElementById('s-unres'), unres);
-    countUp(document.getElementById('s-res'), res);
-    countUp(document.getElementById('s-int'), intTot);
-  } else {
-    document.getElementById('s-tot').textContent = tot.toLocaleString('ar-EG');
-    document.getElementById('s-unres').textContent = unres.toLocaleString('ar-EG');
-    document.getElementById('s-res').textContent = res.toLocaleString('ar-EG');
-    document.getElementById('s-int').textContent = intTot.toLocaleString('ar-EG');
-  }
-  document.getElementById('sb-tot').textContent = tot;
-  document.getElementById('sb-unres').textContent = unres;
-
-  const counts = {phone:0, whatsapp:0, branch:0, twitter:0, email:0};
-  allInts.forEach(i => { const ch = i.ch || i.channel; if(counts[ch]!==undefined) counts[ch]++; });
-  document.getElementById('cnt-phone').textContent = counts.phone;
-  document.getElementById('cnt-wa').textContent = counts.whatsapp;
-  document.getElementById('cnt-br').textContent = counts.branch;
-  document.getElementById('cnt-tw').textContent = counts.twitter;
-  document.getElementById('cnt-em').textContent = counts.email;
-}
-
-let lastFocused = null;
-function getFocusable(root){
-  return [...root.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
-    .filter(el => !el.disabled && el.offsetParent !== null);
-}
-function onModalKeydown(e){
-  if (e.key === 'Escape') { closeReport(); return; }
-  if (e.key === 'Tab') {
-    const f = getFocusable(document.querySelector('.rpanel'));
-    if (!f.length) return;
-    const first = f[0], last = f[f.length-1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  }
-}
-function setRpStatus(msg){ const s = document.getElementById('rp-status'); if (s) s.textContent = msg; }
-function setBody(html){ document.getElementById('rp-body').innerHTML = html; }
-
-// P0-2: layout-matched skeleton (mirrors the 5 report sections) with shimmer + honest steps
-function skeletonHtml() {
-  const sec = `<div class="sk-sec">
-      <div class="sk sk-lbl"></div>
-      <div class="sk sk-line w90"></div><div class="sk sk-line w70"></div><div class="sk sk-line w50"></div>
-    </div>`;
-  return `<div class="sk-body" role="status" aria-busy="true">
-    <div class="gen-steps" aria-hidden="true">
-      <div class="gs" id="gs1"><div class="gs-dot"></div>مراجعة التفاعلات السابقة</div>
-      <div class="gs" id="gs2"><div class="gs-dot"></div>تحديد المشكلات المفتوحة</div>
-      <div class="gs" id="gs3"><div class="gs-dot"></div>التنبؤ بسبب التواصل الحالي</div>
-      <div class="gs" id="gs4"><div class="gs-dot"></div>إعداد التوصيات</div>
-    </div>
-    ${sec}${sec}${sec}
-  </div>`;
-}
-function markStep(id){ const el = document.getElementById(id); if (el) el.classList.add('done'); }
-const REPORT_TTL = 864e5; // 24h
-function isStale(c) {
-  if (!c.report) return true;
-  if (!c.report_updated_at) return true;
-  return Date.now() - Date.parse(c.report_updated_at) > REPORT_TTL;
-}
-const rpErrHtml = onretry => `<div class="rp-err" role="alert">
-    <div class="rp-err-t">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>
-    <button type="button" class="empty-act" ${onretry ? 'onclick="retryReport()"' : ''}>إعادة المحاولة</button>
-  </div>`;
-function retryReport(){ if (curCust) openReport(curCust.id); }
-
-function openReport(id) {
-  curCust = DB.find(c => c.id === id);
-  if (!curCust) return;
-  lastFocused = document.activeElement;
-  const target = curCust;
-  const token = (openReport._token = (openReport._token || 0) + 1);
-  const unres = target.ints.filter(i => (i.st || i.status) === 'unresolved').length;
-  document.getElementById('rp-av').textContent = target.init;
-  document.getElementById('rp-name').textContent = target.name;
-  document.getElementById('rp-meta').textContent = target.ints.length + ' تفاعلات، ' + unres + ' غير محلولة';
-  const channels = [...new Set(target.ints.map(i => i.ch || i.channel))];
-  document.getElementById('rp-channels').innerHTML = channels.map(ch =>
-    `<div class="rp-ch"><div class="rp-ch-dot" aria-hidden="true" style="background:${chColor(ch)}"></div>${esc(chLabel(ch))}</div>`
-  ).join('');
-
-  // P0-1 / P0-2 / P1-7: branch immediately — never a fake delay
-  if (target.report) {
-    // instant cache render
-    try { setBody(renderSavedReport(target).html); setRpStatus('اكتمل تحليل ملف العميل'); }
-    catch(_) { setBody(skeletonHtml()); markStep('gs1'); coldGenerate(target, token); }
-    // SWR: if stale, regenerate in the background and swap when done
-    if (target.report && isStale(target)) {
-      renderReport(target).then(res => {
-        if (openReport._token === token && res && res.status === 'اكتمل تحليل ملف العميل') {
-          setBody(res.html); setRpStatus('تم تحديث التقرير');
-        }
-      }).catch(() => {});
-    }
-  } else {
-    // cold path: real fetch fires now; steps tick on real milestones, not a clock
-    setBody(skeletonHtml());
-    markStep('gs1');
-    coldGenerate(target, token);
-  }
-
-  // P0-3: open the panel — add `.show` (display:flex), then `.open` next frame so the
-  // transform/opacity transition runs; defer the repaint-heavy blur to transitionend.
-  const bd = document.getElementById('backdrop');
-  bd.classList.remove('closing', 'blurred');
-  bd.classList.add('show');
-  document.body.style.overflow = 'hidden';
-  requestAnimationFrame(() => requestAnimationFrame(() => bd.classList.add('open')));
-  const panel = bd.querySelector('.rpanel');
-  panel.addEventListener('transitionend', function onEnd(e){
-    if (e.target === panel && e.propertyName === 'transform' && bd.classList.contains('open')) {
-      bd.classList.add('blurred'); panel.removeEventListener('transitionend', onEnd);
-    }
-  });
-  panel.focus();
-  document.addEventListener('keydown', onModalKeydown);
-}
-
-// cold generate: drive the report body off real work, mark final steps honestly
-function coldGenerate(target, token) {
-  renderReport(target)
-    .then(res => {
-      if (openReport._token !== token || !res) return;
-      // P1-6: on the error path show a Retry affordance, never a frozen skeleton
-      if (res.status !== 'اكتمل تحليل ملف العميل') {
-        setBody(rpErrHtml(true)); setRpStatus(res.status); return;
-      }
-      ['gs2','gs3','gs4'].forEach(markStep);
-      setBody(res.html);
-      setRpStatus(res.status);
-    })
-    .catch(() => {
-      if (openReport._token !== token) return;
-      setBody(rpErrHtml(true));
-      setRpStatus('تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.');
-    });
-}
-
-function renderSavedReport(c) {
-  const r = JSON.parse(c.report);
-  const unresolved = c.ints.filter(i => (i.st||i.status) === 'unresolved');
-  const html = `
-    <div class="rp-sec">
-      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</h3>
-      <div class="rp-txt">${esc(r.sum)}</div>
-    </div>
-    <div class="rp-sec">
-      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-warning)"></div>المشكلات المفتوحة</h3>
-      ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot" aria-hidden="true"></div><span>${esc(i.sum||i.summary)}</span></div>`).join('') : '<div style="font-size:var(--text-base);color:var(--color-text-tertiary)">لا توجد مشكلات مفتوحة.</div>'}
-    </div>
-    <div class="rp-sec">
-      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-violet)"></div>التنبؤ بسبب التواصل الحالي</h3>
-      <div class="rp-txt">${esc(r.pred)}</div>
-    </div>
-    <div class="rp-sec">
-      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>التوصيات المقترحة</h3>
-      ${r.sugs.map((s,i) => `<div class="sug-item"><div class="sug-num" aria-hidden="true">${i+1}</div><span>${esc(s)}</span></div>`).join('')}
-    </div>
-    <div class="rp-sec">
-      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</h3>
-      ${renderTimeline(c)}
-    </div>`;
-  return { html, status: 'اكتمل تحليل ملف العميل' };
-}
-
-async function renderReport(c) {
-  const interactionsText = c.ints.map((i, idx) =>
-    `${idx+1}. القناة: ${chLabel(i.ch||i.channel)} | التاريخ: ${i.date} | الحالة: ${(i.st||i.status)==='unresolved'?'غير محلولة':'محلولة'} | الملخص: ${i.sum||i.summary}`
-  ).join('\n');
-
-  const prompt = `أنت مساعد ذكاء اصطناعي متخصص في خدمة العملاء. فيما يلي سجل تفاعلات العميل ${c.name}:
-
-${interactionsText}
-
-اكتب تقريراً للموظف يتضمن أربعة أقسام فقط بهذا الترتيب والتنسيق بالضبط:
-
-ملخص رحلة العميل:
-[اكتب ملخصاً موجزاً لرحلة العميل]
-
-المشكلات المفتوحة:
-[اذكر المشكلات غير المحلولة فقط، أو اكتب "لا توجد مشكلات مفتوحة"]
-
-التنبؤ بسبب التواصل الحالي:
-[اكتب توقعك لسبب تواصل العميل الآن]
-
-التوصيات المقترحة:
-1. [توصية أولى]
-2. [توصية ثانية]
-3. [توصية ثالثة]
-4. [توصية رابعة]
-
-لا تضف أي نص خارج هذه الأقسام الأربعة.`;
-
-  try {
-    const response = await fetch('https://siyaq-proxy.h-alqahtaniofficial.workers.dev', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    if (!response.ok) throw new Error('proxy responded ' + response.status);
-    const data = await response.json();
-    const text = data?.content?.[0]?.text;
-    if (typeof text !== 'string') throw new Error('unexpected proxy response shape');
-
-    // parse sections
-    const getSection = (label) => {
-      const regex = new RegExp(label + ':\\s*([\\s\\S]*?)(?=ملخص|المشكلات|التنبؤ|التوصيات|$)');
-      const match = text.match(regex);
-      return match ? match[1].trim() : '';
-    };
-
-    const sum  = getSection('ملخص رحلة العميل');
-    const open = getSection('المشكلات المفتوحة');
-    const pred = getSection('التنبؤ بسبب التواصل الحالي');
-    const sugsRaw = getSection('التوصيات المقترحة');
-    const sugs = sugsRaw.split('\n').filter(l => l.trim()).map(l => l.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
-
-    const unresolved = c.ints.filter(i => (i.st||i.status) === 'unresolved');
-
-    const html = `
-      <div class="rp-sec">
-        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</h3>
-        <div class="rp-txt">${esc(sum)}</div>
+      <div class="rp-ftr">
+        <button type="button" class="btn-note">
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          إضافة تفاعل جديد
+        </button>
+        <button type="button" class="btn-cls">إغلاق</button>
       </div>
-      <div class="rp-sec">
-        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-warning)"></div>المشكلات المفتوحة</h3>
-        ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot" aria-hidden="true"></div><span>${esc(i.sum||i.summary)}</span></div>`).join('') : '<div style="font-size:var(--text-base);color:var(--color-text-tertiary)">' + esc(open) + '</div>'}
-      </div>
-      <div class="rp-sec">
-        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-violet)"></div>التنبؤ بسبب التواصل الحالي</h3>
-        <div class="rp-txt">${esc(pred)}</div>
-      </div>
-      <div class="rp-sec">
-        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>التوصيات المقترحة</h3>
-        ${sugs.map((s,i) => `<div class="sug-item"><div class="sug-num" aria-hidden="true">${i+1}</div><span>${esc(s)}</span></div>`).join('')}
-      </div>
-      <div class="rp-sec">
-        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</h3>
-        ${renderTimeline(c)}
-      </div>`;
-
-    // best-effort persistence; failure here must not block showing the report
-    const stamp = new Date().toISOString();
-    try {
-      await sb.from('customers')
-        .update({ report: JSON.stringify({sum, pred, sugs}), report_updated_at: stamp })
-        .eq('id', c.id)
-    } catch(_) { /* non-fatal */ }
-    // keep the in-memory model fresh so the SWR staleness check is accurate this session
-    c.report = JSON.stringify({sum, pred, sugs});
-    c.report_updated_at = stamp;
-
-    return { html, status: 'اكتمل تحليل ملف العميل' };
-  } catch(e) {
-    return {
-      html: '<div role="alert" style="padding:var(--space-10);font-size:var(--text-base);color:var(--color-text-tertiary)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>',
-      status: 'تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.'
-    };
-  }
-}
-
-function closeReport() {
-  const bd = document.getElementById('backdrop');
-  if (!bd.classList.contains('show')) return;
-  // invalidate any in-flight render so a slow fetch can't write into a closed panel
-  openReport._token = (openReport._token || 0) + 1;
-  document.body.style.overflow = '';
-  document.removeEventListener('keydown', onModalKeydown);
-  // P0-3: play the exit (transform-only, faster), then unmount on transitionend
-  bd.classList.remove('open', 'blurred');
-  bd.classList.add('closing');
-  const panel = bd.querySelector('.rpanel');
-  const finish = () => { bd.classList.remove('show', 'closing'); };
-  if (reduceMotion) { finish(); }
-  else {
-    let done = false;
-    const onEnd = e => {
-      if (e.target !== panel || e.propertyName !== 'transform') return;
-      if (done) return; done = true;
-      panel.removeEventListener('transitionend', onEnd); finish();
-    };
-    panel.addEventListener('transitionend', onEnd);
-    setTimeout(() => { if (!done) { done = true; panel.removeEventListener('transitionend', onEnd); finish(); } }, 400);
-  }
-  // P1-5/focus: return focus to the row that opened the panel
-  if (lastFocused && document.contains(lastFocused)) lastFocused.focus();
-}
-
-function setCh(ch) {
-  selCh = ch;
-  document.querySelectorAll('.chb').forEach(b => {
-    b.classList.remove('sel');
-    b.setAttribute('aria-checked','false');
-    b.tabIndex = -1;
-  });
-  const sel = document.getElementById('chb-'+ch);
-  sel.classList.add('sel');
-  sel.setAttribute('aria-checked','true');
-  sel.tabIndex = 0;
-  document.getElementById('email-field').style.display = ch === 'email' ? 'flex' : 'none';
-}
-function setSt(s) {
-  selSt = s;
-  document.getElementById('st-u').className = 'stbtn' + (s==='unresolved' ? ' sel-u' : '');
-  document.getElementById('st-r').className = 'stbtn' + (s==='resolved' ? ' sel-r' : '');
-  const u = document.getElementById('st-u'), r = document.getElementById('st-r');
-  u.setAttribute('aria-checked', s==='unresolved'); u.tabIndex = s==='unresolved' ? 0 : -1;
-  r.setAttribute('aria-checked', s==='resolved');   r.tabIndex = s==='resolved' ? 0 : -1;
-}
-// arrow-key roving for the radiogroups (RTL: ArrowLeft = next, ArrowRight = prev)
-const CH_ORDER = ['phone','whatsapp','branch','twitter','email'];
-const ST_ORDER = ['unresolved','resolved'];
-function rovingKeys(e, order, current, setter, prefix){
-  let i = order.indexOf(current);
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') i = (i+1) % order.length;
-  else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') i = (i-1+order.length) % order.length;
-  else return;
-  e.preventDefault();
-  setter(order[i]);
-  document.getElementById(prefix+(prefix==='chb-'?order[i]:(order[i]==='unresolved'?'u':'r'))).focus();
-}
-document.querySelector('[aria-labelledby="ch-grp-lbl"]').addEventListener('keydown', e => rovingKeys(e, CH_ORDER, selCh, setCh, 'chb-'));
-document.querySelector('[aria-labelledby="st-grp-lbl"]').addEventListener('keydown', e => rovingKeys(e, ST_ORDER, selSt, setSt, 'st-'));
-
-async function addInt() {
-  const name = document.getElementById('f-name').value.trim()
-  const phone = document.getElementById('f-phone').value.trim()
-  const summary = document.getElementById('f-summary').value.trim()
-  const date = document.getElementById('f-date').value
-  const errEl = document.getElementById('f-error')
-  if (!name || !phone || !summary || !date) {
-    errEl.textContent = 'يرجى تعبئة الحقول المطلوبة: الاسم، الهاتف، الملخص، والتاريخ.'
-    errEl.classList.remove('visually-hidden')
-    return
-  }
-  errEl.textContent = ''
-  errEl.classList.add('visually-hidden')
-
-  if (selCh === 'email') {
-    const emailVal = document.getElementById('f-email').value.trim()
-    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-      errEl.textContent = 'يرجى إدخال بريد إلكتروني صحيح.'
-      errEl.classList.remove('visually-hidden')
-      return
-    }
-  }
-
-  const submitBtn = document.querySelector('.btn-add')
-  if (submitBtn.disabled) return
-  submitBtn.disabled = true
-  submitBtn.setAttribute('aria-busy', 'true')
-
-  const emailVal = selCh === 'email' ? document.getElementById('f-email').value.trim() : null
-
-  // P1-4: optimistic feedback — add is low-risk + likely to succeed, so confirm + show the
-  // recent item (dimmed/pending) immediately, then reconcile against the writes below.
-  const ch = selCh
-  const tt = document.querySelector('#tst .tst-text'); if (tt) tt.textContent = 'تمت الإضافة بنجاح.'
-  showConfirm('tst', 3800)
-  const pendingItem = updateRecent(name, ch, date, true)
-  clearForm()
-
-  try {
-    const { data: existingList, error: lookupErr } = await sb.from('customers')
-      .select('*').eq('phone', phone)
-    if (lookupErr) throw lookupErr
-
-    let customerId
-    if (existingList && existingList.length > 0) {
-      customerId = existingList[0].id
-    } else {
-      const { data: newCustList, error: insErr } = await sb.from('customers')
-        .insert([{ name, phone, init: name.slice(0,2) }])
-        .select()
-      if (insErr) throw insErr
-      if (!newCustList || !newCustList.length) throw new Error('insert returned no row')
-      customerId = newCustList[0].id
-    }
-
-    const { error: intErr } = await sb.from('interactions').insert([{
-      customer_id: customerId,
-      channel: ch,
-      date,
-      summary,
-      status: selSt,
-      email: emailVal
-    }])
-    if (intErr) throw intErr
-
-    // best-effort report invalidation; failure here is non-fatal
-    await sb.from('customers')
-      .update({ report: null })
-      .eq('id', customerId)
-
-    if (pendingItem) pendingItem.classList.remove('pending') // confirmed
-    loadCustomers()
-  } catch (e) {
-    // roll back the optimistic recent item + surface the failure
-    if (pendingItem) pendingItem.remove()
-    showAddError('تعذر حفظ التفاعل. حاول مرة أخرى.')
-  } finally {
-    submitBtn.disabled = false
-    submitBtn.removeAttribute('aria-busy')
-  }
-}
-
-// P1-2: inline confirm motion — spring-in, auto-dismiss with a faster leaving exit.
-const _tstTimers = {};
-function showConfirm(id, dur) {
-  const t = document.getElementById(id);
-  clearTimeout(_tstTimers[id]);
-  t.classList.remove('leaving');
-  t.classList.add('show');
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('in')));
-  _tstTimers[id] = setTimeout(() => hideConfirm(id), dur);
-}
-function hideConfirm(id) {
-  const t = document.getElementById(id);
-  t.classList.remove('in');
-  t.classList.add('leaving');
-  const done = () => { t.classList.remove('show', 'leaving'); };
-  if (reduceMotion) done();
-  else _tstTimers[id] = setTimeout(done, 200);
-}
-function showAddError(msg) {
-  // hide the success toast if it happens to be visible
-  hideConfirm('tst')
-  const t = document.querySelector('#tst-err .tst-err-text'); if (t) t.textContent = msg
-  showConfirm('tst-err', 4000)
-}
-
-function updateRecent(name, ch, date, pending) {
-  const el = document.getElementById('rec-list');
-  // drop the static "no recent additions" placeholder on the first real insert
-  const placeholder = el.querySelector(':scope > div:not(.rec-item)');
-  if (placeholder) placeholder.remove();
-  const init = name.slice(0,2);
-  const item = document.createElement('div');
-  item.className = 'rec-item' + (pending ? ' pending' : '');
-  item.innerHTML = `<div class="rec-av" aria-hidden="true">${esc(init)}</div><div><div class="rec-name">${esc(name)}</div><div class="rec-meta">${esc(chLabel(ch))} — ${esc(date)}</div></div>`;
-  el.prepend(item);
-  if (el.children.length > 5) el.lastChild.remove();
-  return item;
-}
-
-function clearForm() {
-  ['f-name','f-phone','f-summary'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-  setCh('phone'); setSt('unresolved');
-}
-
-function addNote() {
-  closeReport();
-  goPage('add');
-  if (curCust) {
-    document.getElementById('f-name').value = curCust.name;
-    document.getElementById('f-phone').value = curCust.phone;
-  }
-}
-
-
-
-            //asks supabase for customers, interactions then links them together and updates the stats with the real data
-async function loadCustomers() {
-  const { data: customers, error: cErr } = await sb.from('customers').select('*')
-  const { data: interactions, error: iErr } = await sb.from('interactions').select('*')
-  if (cErr || iErr) {
-    document.getElementById('clist').innerHTML =
-      '<div class="empty">تعذر تحميل البيانات. تحقق من الاتصال.</div>'
-    return
-  }
-  DB = (customers || []).map(c => ({
-    ...c,
-    ints: (interactions || []).filter(i => i.customer_id === c.id)
-  }))
-  updateStats();
-  renderList(DB);
-}
-
-// open a customer's report via event delegation (keeps customer ids out of any inline-handler JS context)
-(function () {
-  const clist = document.getElementById('clist');
-  clist.addEventListener('click', e => {
-    const card = e.target.closest('.ccard');
-    if (card && card.dataset.id) openReport(card.dataset.id);
-  });
-  clist.addEventListener('keydown', e => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = e.target.closest('.ccard');
-    if (card && card.dataset.id) { e.preventDefault(); openReport(card.dataset.id); }
-  });
-})();
-
-// P1-5: power-user keyboard shortcuts. j/k + Up/Down are vertical → never RTL-flipped.
-function visibleCards() {
-  return [...document.querySelectorAll('#clist .ccard')]
-    .filter(c => c.offsetParent !== null); // skips hidden (filtered) rows
-}
-function moveSel(dir) {
-  if (!document.getElementById('page-agent').classList.contains('active')) return;
-  const cards = visibleCards();
-  if (!cards.length) return;
-  let i = cards.findIndex(c => c === document.activeElement);
-  i = i < 0 ? (dir > 0 ? 0 : cards.length - 1) : Math.min(Math.max(i + dir, 0), cards.length - 1);
-  const card = cards[i];
-  card.focus();
-  card.scrollIntoView({ block: 'nearest' });
-}
-document.addEventListener('keydown', e => {
-  if (e.metaKey || e.ctrlKey || e.altKey) return;
-  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName);
-  const panelOpen = document.getElementById('backdrop').classList.contains('show');
-  if (e.key === '/' && !typing && !panelOpen) {
-    e.preventDefault();
-    document.getElementById('search-in').focus();
-  } else if (e.key === 'Escape') {
-    // context-stacked: panel → close; else search has text → clear+refocus
-    if (panelOpen) { /* panel handles its own Esc via onModalKeydown */ }
-    else if (document.getElementById('search-in').value) { clearSearch(); }
-  } else if (!typing && !panelOpen && (e.key === 'j' || e.key === 'ArrowDown')) {
-    e.preventDefault(); moveSel(+1);
-  } else if (!typing && !panelOpen && (e.key === 'k' || e.key === 'ArrowUp')) {
-    e.preventDefault(); moveSel(-1);
-  }
-});
-
-const today = new Date().toISOString().split('T')[0];
-const fDate = document.getElementById('f-date');
-fDate.value = today;
-fDate.max = today;
-loadCustomers();
-  
-</script>
+    </div>
+  </div>
 </body>
 </html>
