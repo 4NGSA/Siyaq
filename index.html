@@ -111,6 +111,7 @@
   --color-accent-on-subtle-text:#1D4ED8;
   --color-accent-on-subtle-border:#93C5FD;
   --color-accent-border-soft:#BFDBFE;
+  --color-accent-text:#6FA3FB;
 
   /* Status — Success */
   --color-success:var(--green);
@@ -166,10 +167,10 @@ body{
   font-family:var(--font-serif);
   font-size:var(--text-md);line-height:var(--leading-normal);
   min-height:100vh;
-  cursor:none;
   direction:rtl;
 }
-#cur{
+/* custom cursor off by default; native cursor kept everywhere */
+#cur{display:none;
   width:9px;height:9px;
   background:var(--color-accent);border-radius:var(--radius-full);
   position:fixed;top:0;left:0;
@@ -177,6 +178,22 @@ body{
   transform:translate(-50%,-50%);
   transition:width var(--dur-cursor),height var(--dur-cursor);
 }
+/* interactive controls get a pointer when the custom cursor is off */
+.nav-btn,.ccard,.chb,.stbtn,.btn-add,.rp-x,.btn-note,.btn-cls{cursor:pointer}
+.fi,.search-box input{cursor:text}
+/* enable the custom cursor only for a fine, hovering pointer */
+@media (hover:hover) and (pointer:fine){
+  body{cursor:none}
+  #cur{display:block}
+  .nav-btn,.ccard,.chb,.stbtn,.btn-add,.rp-x,.btn-note,.btn-cls,
+  .search-box input,.fi{cursor:none}
+}
+/* global focus indicators (visible even with custom cursor active) */
+:focus-visible{outline:var(--border-accent) solid var(--color-accent);outline-offset:2px;border-radius:var(--radius-md)}
+.fi:focus-visible,.search-box input:focus-visible{outline:var(--border-accent) solid var(--color-accent);outline-offset:1px}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip-link{position:absolute;right:var(--space-4);top:-60px;z-index:var(--z-cursor);background:var(--color-accent);color:var(--color-text-on-accent);padding:var(--space-4) var(--space-7);border-radius:var(--radius-md);font-size:var(--text-base);transition:top var(--dur-instant)}
+.skip-link:focus{top:var(--space-4)}
 #cur.big{width:34px;height:34px;background:var(--color-cursor-fill);border:var(--border-control) solid var(--color-cursor-ring)}
 
 .shell{display:flex;height:100vh;overflow:hidden;direction:rtl}
@@ -217,11 +234,11 @@ body{
   background:transparent;color:var(--color-text-secondary);
   font-family:var(--font-serif);
   font-size:var(--text-base);text-align:right;
-  cursor:none;transition:all var(--dur-instant);margin-bottom:var(--space-1);
+  transition:all var(--dur-instant);margin-bottom:var(--space-1);
 }
 .nav-btn svg{width:16px;height:16px;flex-shrink:0;opacity:0.55}
 .nav-btn:hover{background:var(--color-surface-sunken);color:var(--color-text-primary)}
-.nav-btn.active{background:var(--color-accent-subtle);color:var(--color-accent);font-weight:var(--weight-medium)}
+.nav-btn.active{background:var(--color-accent-subtle);color:var(--color-accent-text);font-weight:var(--weight-medium)}
 .nav-btn.active svg{opacity:1}
 
 .sb-channels{padding:var(--space-2) var(--space-4) var(--space-5);display:flex;flex-direction:column;gap:var(--space-5px)}
@@ -248,8 +265,8 @@ body{
 .topbar-r{margin-right:auto;display:flex;align-items:center;gap:var(--space-5)}
 .api-badge{
   font-size:var(--text-xs);padding:var(--space-3px) var(--space-9px);border-radius:var(--radius-xs);
-  background:var(--color-success-subtle);color:var(--color-success-on-subtle-text);
-  border:var(--border-hairline) solid var(--color-success-on-subtle-border);
+  background:var(--color-success-subtle);color:var(--color-success);
+  border:var(--border-hairline) solid var(--color-success);
 }
 
 .content{flex:1;overflow-y:auto;padding:var(--space-11)}
@@ -296,9 +313,10 @@ body{
   border-radius:var(--radius-lg);padding:var(--space-13px) var(--space-15px);
   display:grid;grid-template-columns:auto 1fr auto;
   align-items:center;gap:var(--space-13px);
-  cursor:none;transition:all var(--dur-fast);
+  transition:all var(--dur-fast);
 }
 .ccard:hover{border-color:var(--color-accent);box-shadow:var(--shadow-card-hover)}
+.ccard:focus-visible{border-color:var(--color-accent);box-shadow:var(--shadow-card-hover);outline:var(--border-accent) solid var(--color-accent);outline-offset:2px}
 .av{
   width:38px;height:38px;border-radius:var(--radius-full);
   background:var(--color-accent-subtle);color:var(--color-accent);
@@ -313,8 +331,8 @@ body{
   border-radius:var(--radius-pill);
 }
 .b-amber{background:var(--color-warning-subtle);color:var(--color-warning);border:var(--border-hairline) solid var(--color-warning-border)}
-.b-green{background:var(--color-success-subtle);color:var(--color-success-on-subtle-text);border:var(--border-hairline) solid var(--color-success-on-subtle-border)}
-.b-blue{background:var(--color-accent-subtle);color:var(--color-accent-on-subtle-text);border:var(--border-hairline) solid var(--color-accent-on-subtle-border)}
+.b-green{background:var(--color-success-subtle);color:var(--color-success);border:var(--border-hairline) solid rgba(45,212,160,0.35)}
+.b-blue{background:var(--color-accent-subtle);color:var(--color-accent-text);border:var(--border-hairline) solid var(--color-accent-border)}
 .ccard-arrow{color:var(--color-text-tertiary)}
 
 /* ADD PAGE */
@@ -343,7 +361,7 @@ textarea.fi{resize:vertical;min-height:78px}
 .chb{
   padding:var(--space-4) var(--space-2);border-radius:var(--radius-md);
   border:var(--border-control) solid var(--color-border);
-  background:var(--color-surface);cursor:none;
+  background:var(--color-surface);
   transition:all var(--dur-instant);
   display:flex;flex-direction:column;align-items:center;gap:var(--space-2);
   font-family:var(--font-serif);
@@ -362,13 +380,13 @@ textarea.fi{resize:vertical;min-height:78px}
 .stbtn{
   flex:1;padding:var(--space-4);border-radius:var(--radius-md);
   border:var(--border-control) solid var(--color-border);background:var(--color-surface);
-  cursor:none;font-family:var(--font-serif);
+  font-family:var(--font-serif);
   font-size:var(--text-sm);font-weight:var(--weight-medium);
   display:flex;align-items:center;justify-content:center;gap:var(--space-3);
   transition:all var(--dur-instant);
 }
 .stbtn.sel-u{border-color:var(--color-warning);background:var(--color-warning-bg-12);color:var(--color-warning)}
-.stbtn.sel-r{border-color:var(--color-success);background:var(--color-success-subtle);color:var(--color-success-on-subtle-text)}
+.stbtn.sel-r{border-color:var(--color-success);background:var(--color-success-subtle);color:var(--color-success)}
 
 .fdiv{height:1px;background:var(--color-border);margin:var(--space-8) 0}
 .btn-add{
@@ -376,15 +394,15 @@ textarea.fi{resize:vertical;min-height:78px}
   background:var(--color-accent);color:var(--color-text-on-accent);
   border:none;border-radius:var(--radius-md);
   font-family:var(--font-serif);
-  font-size:var(--text-base);font-weight:var(--weight-medium);cursor:none;
+  font-size:var(--text-base);font-weight:var(--weight-medium);
   display:flex;align-items:center;justify-content:center;gap:var(--space-4);
   transition:opacity var(--dur-instant);
 }
 .btn-add:hover{opacity:.88}
 .tst{
   margin-top:var(--space-11px);padding:var(--space-9px) var(--space-13px);
-  background:var(--color-success-subtle);border:var(--border-hairline) solid var(--color-success-on-subtle-border);
-  border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-success-on-subtle-text);
+  background:var(--color-success-subtle);border:var(--border-hairline) solid var(--color-success);
+  border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-success);
   display:none;align-items:center;gap:var(--space-4);
 }
 .tst.show{display:flex}
@@ -445,7 +463,7 @@ textarea.fi{resize:vertical;min-height:78px}
 .rp-x{
   width:28px;height:28px;border-radius:var(--radius-sm);
   border:var(--border-hairline) solid var(--color-border);background:transparent;
-  cursor:none;display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   color:var(--color-text-secondary);font-size:var(--text-md);transition:all var(--dur-instant);flex-shrink:0;
 }
 .rp-x:hover{background:var(--color-surface-sunken)}
@@ -482,7 +500,7 @@ textarea.fi{resize:vertical;min-height:78px}
 .sug-item{
   display:flex;gap:var(--space-9px);align-items:flex-start;
   padding:var(--space-9px) var(--space-11px);background:var(--color-accent-subtle);
-  border:var(--border-hairline) solid var(--color-accent-border-soft);border-radius:var(--radius-card-alt);
+  border:var(--border-hairline) solid rgba(79,142,247,0.4);border-radius:var(--radius-card-alt);
   font-size:var(--text-base);color:var(--color-text-primary);
   margin-bottom:var(--space-3);line-height:var(--leading-snug);
 }
@@ -518,9 +536,9 @@ textarea.fi{resize:vertical;min-height:78px}
 .btn-note{
   flex:1;padding:var(--space-9px);
   border:var(--border-control) solid var(--color-accent);background:var(--color-accent-subtle);
-  color:var(--color-accent);border-radius:var(--radius-md);
+  color:var(--color-accent-text);border-radius:var(--radius-md);
   font-family:var(--font-sans);
-  font-size:var(--text-base);font-weight:var(--weight-medium);cursor:none;
+  font-size:var(--text-base);font-weight:var(--weight-medium);
   display:flex;align-items:center;justify-content:center;gap:var(--space-3);
   transition:all var(--dur-instant);
 }
@@ -530,7 +548,7 @@ textarea.fi{resize:vertical;min-height:78px}
   border:var(--border-hairline) solid var(--color-border);background:transparent;
   color:var(--color-text-secondary);border-radius:var(--radius-md);
   font-family:var(--font-sans);
-  font-size:var(--text-base);cursor:none;transition:all var(--dur-instant);
+  font-size:var(--text-base);transition:all var(--dur-instant);
 }
 .btn-cls:hover{background:var(--color-surface)}
 
@@ -554,7 +572,7 @@ textarea.fi{resize:vertical;min-height:78px}
   background:var(--color-surface);border:var(--border-hairline) solid var(--color-border);
   opacity:.35;transition:opacity var(--dur-step),border-color var(--dur-step);
 }
-.gs.done{opacity:1;border-color:var(--color-success-on-subtle-border);color:var(--color-text-secondary)}
+.gs.done{opacity:1;border-color:var(--color-success);color:var(--color-text-secondary)}
 .gs-dot{width:5px;height:5px;border-radius:var(--radius-full);background:var(--color-text-tertiary);flex-shrink:0;transition:background var(--dur-step)}
 .gs.done .gs-dot{background:var(--color-success)}
 
@@ -589,10 +607,26 @@ textarea.fi{resize:vertical;min-height:78px}
 .fd2{animation-delay:var(--delay-2);opacity:0}
 .fd3{animation-delay:var(--delay-3);opacity:0}
 .fd4{animation-delay:var(--delay-4);opacity:0}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  html{scroll-behavior:auto !important}
+  .rpanel{animation:none !important}
+  .spin{animation:none !important;border-top-color:var(--color-accent)}
+  .fu,.fd1,.fd2,.fd3,.fd4{animation:none !important;opacity:1 !important;transform:none !important}
+  #cur{transition:none !important}
+}
 </style>
 </head>
 <body>
 <div id="cur"></div>
+<a href="#main-content" class="skip-link">تخطّ إلى المحتوى</a>
+<h1 class="visually-hidden">سياق — وكيل التحليل</h1>
 
 <div class="shell">
 
@@ -600,9 +634,9 @@ textarea.fi{resize:vertical;min-height:78px}
   <aside class="sidebar">
     <div class="sb-top">
       <div class="sb-logo" style="gap:12px">
-        <object data="Logo.svg" type="image/svg+xml" width="38" height="47.5" style="pointer-events:none">
+        <object data="Logo.svg" type="image/svg+xml" width="38" height="47.5" style="pointer-events:none" aria-hidden="true">
           <!-- Fallback for browsers that don't support object tag -->
-          <img src="Logo.svg" alt="سياق Logo" width="38" height="47.5" />
+          <img src="Logo.svg" alt="" width="38" height="47.5" />
         </object>
         <div>
           <span class="sb-brand-name">سياق</span>
@@ -611,14 +645,14 @@ textarea.fi{resize:vertical;min-height:78px}
       </div>
     </div>
 
-    <nav class="sb-nav">
+    <nav class="sb-nav" aria-label="التنقل الرئيسي">
       <div class="sb-sec-label">الرئيسية</div>
-      <button class="nav-btn active" id="nav-agent" onclick="goPage('agent')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      <button type="button" class="nav-btn active" id="nav-agent" aria-current="page" onclick="goPage('agent')">
+        <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
         وكيل التحليل
       </button>
-      <button class="nav-btn" id="nav-add" onclick="goPage('add')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+      <button type="button" class="nav-btn" id="nav-add" onclick="goPage('add')">
+        <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
         إضافة للقاعدة
       </button>
 
@@ -647,7 +681,7 @@ textarea.fi{resize:vertical;min-height:78px}
       </div>
     </div>
 
-    <div class="content">
+    <div class="content" id="main-content" role="main" tabindex="-1">
 
       <!-- AGENT PAGE -->
       <div class="page active" id="page-agent">
@@ -659,8 +693,8 @@ textarea.fi{resize:vertical;min-height:78px}
         </div>
 
         <div class="search-box fu fd2">
-          <svg class="search-ico" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          <input type="text" id="search-in" placeholder="ابحث بالاسم أو رقم الهاتف أو المعرف..." oninput="filterList()"/>
+          <svg class="search-ico" aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input type="text" id="search-in" aria-label="ابحث بالاسم أو رقم الهاتف أو المعرف" placeholder="ابحث بالاسم أو رقم الهاتف أو المعرف..." oninput="filterList()"/>
         </div>
 
         <div class="list-hdr fu fd3">
@@ -674,50 +708,50 @@ textarea.fi{resize:vertical;min-height:78px}
       <div class="page" id="page-add">
         <div class="add-layout">
           <div class="fcard fu fd1">
-            <div class="fcard-title">تسجيل تفاعل جديد</div>
+            <h2 class="fcard-title">تسجيل تفاعل جديد</h2>
             <div class="fcard-sub">أضف تفاعل عميل من أي قناة إلى قاعدة البيانات.</div>
 
             <div class="frow">
               <div class="fg">
-                <label class="fl">اسم العميل</label>
-                <input class="fi" type="text" id="f-name" placeholder="أحمد الزهراني"/>
+                <label class="fl" for="f-name">اسم العميل</label>
+                <input class="fi" type="text" id="f-name" placeholder="أحمد الزهراني" required aria-required="true"/>
               </div>
               <div class="fg">
-                <label class="fl">الهاتف / المعرف</label>
-                <input class="fi" type="text" id="f-phone" placeholder="0512345678"/>
+                <label class="fl" for="f-phone">الهاتف / المعرف</label>
+                <input class="fi" type="text" id="f-phone" placeholder="0512345678" required aria-required="true"/>
               </div>
             </div>
 
-            <div class="fg">
-              <label class="fl">القناة</label>
+            <div class="fg" role="radiogroup" aria-labelledby="ch-grp-lbl">
+              <span class="fl" id="ch-grp-lbl">القناة</span>
               <div class="ch-grid">
-                <button class="chb sel" id="chb-phone" onclick="setCh('phone')">
+                <button type="button" class="chb sel" id="chb-phone" role="radio" aria-checked="true" tabindex="0" onclick="setCh('phone')">
                   <div class="chb-ico" style="background:var(--color-accent-subtle-2);color:var(--channel-phone-chip)">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h1a1.5 1.5 0 011.5 1.5v1A1.5 1.5 0 015.5 6H5a7 7 0 005.5 5.5v-.5A1.5 1.5 0 0112 9.5h1A1.5 1.5 0 0114.5 11v1A1.5 1.5 0 0113 13.5C7.201 13.5 2.5 8.799 2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h1a1.5 1.5 0 011.5 1.5v1A1.5 1.5 0 015.5 6H5a7 7 0 005.5 5.5v-.5A1.5 1.5 0 0112 9.5h1A1.5 1.5 0 0114.5 11v1A1.5 1.5 0 0113 13.5C7.201 13.5 2.5 8.799 2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                   </div>
                   <span class="chb-lbl">هاتف</span>
                 </button>
-                <button class="chb" id="chb-whatsapp" onclick="setCh('whatsapp')">
+                <button type="button" class="chb" id="chb-whatsapp" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('whatsapp')">
                   <div class="chb-ico" style="background:var(--color-success-subtle-2);color:var(--channel-whatsapp-chip)">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 8.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 8.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                   </div>
                   <span class="chb-lbl">واتساب</span>
                 </button>
-                <button class="chb" id="chb-branch" onclick="setCh('branch')">
+                <button type="button" class="chb" id="chb-branch" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('branch')">
                   <div class="chb-ico" style="background:var(--color-violet-subtle-2);color:var(--channel-branch-chip)">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 13.5V6.5l4.5-4 4.5 4v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="9.5" width="4" height="4" rx=".5" stroke="currentColor" stroke-width="1.3"/></svg>
+                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 13.5V6.5l4.5-4 4.5 4v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="9.5" width="4" height="4" rx=".5" stroke="currentColor" stroke-width="1.3"/></svg>
                   </div>
                   <span class="chb-lbl">فرع</span>
                 </button>
-                <button class="chb" id="chb-twitter" onclick="setCh('twitter')">
+                <button type="button" class="chb" id="chb-twitter" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('twitter')">
                   <div class="chb-ico" style="background:var(--color-info-subtle-2);color:var(--channel-twitter-chip)">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5L6.5 8l-4-5.5h3l2.5 3.5 3-3.5h2.5L9.5 7.5 14 13H11l-2.5-3.5L5.5 13H2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5L6.5 8l-4-5.5h3l2.5 3.5 3-3.5h2.5L9.5 7.5 14 13H11l-2.5-3.5L5.5 13H2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
                   </div>
                   <span class="chb-lbl">تويتر</span>
                 </button>
-                <button class="chb" id="chb-email" onclick="setCh('email')">
+                <button type="button" class="chb" id="chb-email" role="radio" aria-checked="false" tabindex="-1" onclick="setCh('email')">
                   <div class="chb-ico" style="background:var(--color-amber-true-subtle);color:var(--channel-email-chip)">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 4.5l5.5 4 5.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 4.5l5.5 4 5.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                   </div>
                   <span class="chb-lbl">بريد</span>
                 </button>
@@ -725,24 +759,24 @@ textarea.fi{resize:vertical;min-height:78px}
             </div>
 
             <div class="fg" id="email-field" style="display:none">
-              <label class="fl">البريد الإلكتروني</label>
+              <label class="fl" for="f-email">البريد الإلكتروني</label>
               <input class="fi" type="email" id="f-email" placeholder="example@email.com" dir="ltr"/>
             </div>
 
             <div class="frow">
               <div class="fg">
-                <label class="fl">التاريخ</label>
-                <input class="fi" type="date" id="f-date"/>
+                <label class="fl" for="f-date">التاريخ</label>
+                <input class="fi" type="date" id="f-date" required aria-required="true"/>
               </div>
-              <div class="fg">
-                <label class="fl">الحالة</label>
+              <div class="fg" role="radiogroup" aria-labelledby="st-grp-lbl">
+                <span class="fl" id="st-grp-lbl">الحالة</span>
                 <div class="strow">
-                  <button class="stbtn sel-u" id="st-u" onclick="setSt('unresolved')">
-                    <span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-warning);display:inline-block"></span>
+                  <button type="button" class="stbtn sel-u" id="st-u" role="radio" aria-checked="true" tabindex="0" onclick="setSt('unresolved')">
+                    <span aria-hidden="true" style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-warning);display:inline-block"></span>
                     غير محلولة
                   </button>
-                  <button class="stbtn" id="st-r" onclick="setSt('resolved')">
-                    <span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-success);display:inline-block"></span>
+                  <button type="button" class="stbtn" id="st-r" role="radio" aria-checked="false" tabindex="-1" onclick="setSt('resolved')">
+                    <span aria-hidden="true" style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--color-success);display:inline-block"></span>
                     محلولة
                   </button>
                 </div>
@@ -750,23 +784,24 @@ textarea.fi{resize:vertical;min-height:78px}
             </div>
 
             <div class="fg">
-              <label class="fl">ملخص</label>
-              <textarea class="fi" id="f-summary" placeholder="وصف مختصر لسبب التواصل وما تم..."></textarea>
+              <label class="fl" for="f-summary">ملخص</label>
+              <textarea class="fi" id="f-summary" placeholder="وصف مختصر لسبب التواصل وما تم..." required aria-required="true"></textarea>
             </div>
 
             <div class="fdiv"></div>
-            <button class="btn-add" onclick="addInt()">
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <button type="button" class="btn-add" onclick="addInt()">
+              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
               إضافة التفاعل
             </button>
-            <div class="tst" id="tst">
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#2DD4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              تمت الإضافة بنجاح.
+            <p id="f-error" class="visually-hidden" role="alert"></p>
+            <div class="tst" id="tst" role="status" aria-live="polite">
+              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#2DD4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="tst-text">تمت الإضافة بنجاح.</span>
             </div>
           </div>
 
           <div class="rcard fu fd2">
-            <div class="rcard-title">آخر الإضافات</div>
+            <h2 class="rcard-title">آخر الإضافات</h2>
             <div class="rec-list" id="rec-list">
               <div style="font-size:var(--text-sm);color:var(--color-text-tertiary);padding:var(--space-3)">لا توجد إضافات حديثة.</div>
             </div>
@@ -779,29 +814,30 @@ textarea.fi{resize:vertical;min-height:78px}
 </div>
 
 <!-- REPORT PANEL -->
-<div class="backdrop" id="backdrop">
-  <div class="rpanel">
+<div class="backdrop" id="backdrop" onclick="if(event.target===this)closeReport()">
+  <div class="rpanel" role="dialog" aria-modal="true" aria-labelledby="rp-name" aria-describedby="rp-meta" tabindex="-1">
+    <p id="rp-status" class="visually-hidden" role="status" aria-live="polite"></p>
     <div class="rp-hdr">
       <div class="rp-top">
         <div class="rp-cust">
-          <div class="rp-av" id="rp-av">AZ</div>
+          <div class="rp-av" id="rp-av" aria-hidden="true">AZ</div>
           <div>
-            <div class="rp-name" id="rp-name">أحمد الزهراني</div>
+            <h2 class="rp-name" id="rp-name">أحمد الزهراني</h2>
             <div class="rp-meta" id="rp-meta">4 تفاعلات</div>
           </div>
         </div>
-        <button class="rp-x" onclick="closeReport()">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <button type="button" class="rp-x" aria-label="إغلاق التقرير" onclick="closeReport()">
+          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
       </div>
       <div class="rp-channels" id="rp-channels"></div>
     </div>
 
     <div class="rp-body" id="rp-body">
-      <div class="gen-state">
-        <div class="spin"></div>
+      <div class="gen-state" role="status" aria-busy="true">
+        <div class="spin" aria-hidden="true"></div>
         <div class="gen-txt">جاري تحليل ملف العميل...</div>
-        <div class="gen-steps">
+        <div class="gen-steps" aria-hidden="true">
           <div class="gs" id="gs1"><div class="gs-dot"></div>مراجعة التفاعلات السابقة</div>
           <div class="gs" id="gs2"><div class="gs-dot"></div>تحديد المشكلات المفتوحة</div>
           <div class="gs" id="gs3"><div class="gs-dot"></div>التنبؤ بسبب التواصل الحالي</div>
@@ -811,11 +847,11 @@ textarea.fi{resize:vertical;min-height:78px}
     </div>
 
     <div class="rp-ftr">
-      <button class="btn-note" onclick="addNote()">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <button type="button" class="btn-note" onclick="addNote()">
+        <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         إضافة تفاعل جديد
       </button>
-      <button class="btn-cls" onclick="closeReport()">إغلاق</button>
+      <button type="button" class="btn-cls" onclick="closeReport()">إغلاق</button>
     </div>
   </div>
 </div>
@@ -830,12 +866,15 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
                                                                               //End of backend part connecting to supabase
 
   
-const cur = document.getElementById('cur');
-document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
-document.addEventListener('mouseover', e => {
-  if (e.target.closest('button, .ccard')) cur.classList.add('big');
-  else cur.classList.remove('big');
-});
+const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+if (fine) {
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest('button, .ccard')) cur.classList.add('big');
+    else cur.classList.remove('big');
+  });
+}
 
 const CH_COLORS = { phone:'#4F8EF7', whatsapp:'#2DD4A0', branch:'#A78BFA', twitter:'#38BDF8', email:'#F5A623' };
 const CH_LABELS = { phone:'هاتف', whatsapp:'واتساب', branch:'فرع', twitter:'تويتر', email:'بريد' };
@@ -849,11 +888,14 @@ function goPage(p) {
   document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('nav-'+p).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(x => x.removeAttribute('aria-current'));
+  document.getElementById('nav-'+p).setAttribute('aria-current','page');
   document.getElementById('tb-title').textContent = p === 'agent' ? 'وكيل التحليل' : 'إضافة للقاعدة';
 }
 
 function chColor(ch){ return CH_COLORS[ch] || '#888'; }
 function chLabel(ch){ return CH_LABELS[ch] || ch; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 function aiSummaryCard(c) {
   if (!c.ints || !c.ints.length) return '';
@@ -867,15 +909,15 @@ function aiSummaryCard(c) {
   else s = { mood: 'مستفسر', moodScore: 30, moodColor: '#4F8EF7', classification: 'استفسار', prediction: 'يحتاج توضيحاً أو متابعة', icon: '?' };
   return `<div class="ai-card">
     <div class="ai-card-header">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 7l-3.5 1.5L8 12l-1.5-3.5L3 7l3.5-1.5z" fill="#4F8EF7"/></svg>
+      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 7l-3.5 1.5L8 12l-1.5-3.5L3 7l3.5-1.5z" fill="#4F8EF7"/></svg>
       <span>المساعد الذكي</span>
     </div>
     <div class="ai-card-body">
       <div class="ai-mood-row">
-        <span class="ai-mood-badge" style="border-color:${s.moodColor}33;color:${s.moodColor};background:${s.moodColor}15">${s.icon} تحليل المشاعر: ${s.mood} (${s.moodScore}%)</span>
+        <span class="ai-mood-badge" style="border-color:${s.moodColor}33;color:${s.moodColor};background:${s.moodColor}15"><span aria-hidden="true">${s.icon}</span> تحليل المشاعر: ${esc(s.mood)} (${s.moodScore}%)</span>
       </div>
-      <div class="ai-classify">التصنيف: ${s.classification}</div>
-      <div class="ai-pred">${s.prediction}</div>
+      <div class="ai-classify">التصنيف: ${esc(s.classification)}</div>
+      <div class="ai-pred">${esc(s.prediction)}</div>
     </div>
   </div>`;
 }
@@ -889,23 +931,24 @@ function renderList(list) {
     const unres = c.ints.filter(i => (i.st||i.status) === 'unresolved').length;
     const last = c.ints[c.ints.length-1];
     const channels = [...new Set(c.ints.map(i => i.ch||i.channel))];
-    return `<div class="ccard" onclick="openReport('${c.id}')">
-      <div class="av">${c.init}</div>
+    const cardLbl = esc(`عرض تقرير ${c.name}، ${c.ints.length} تفاعلات${unres>0 ? '، '+unres+' غير محلولة' : ''}`);
+    return `<div class="ccard" role="button" tabindex="0" aria-label="${cardLbl}" onclick="openReport('${esc(c.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openReport('${esc(c.id)}')}">
+      <div class="av" aria-hidden="true">${esc(c.init)}</div>
       <div>
-        <div class="ci-name">${c.name}</div>
+        <div class="ci-name">${esc(c.name)}</div>
         <div class="ci-meta">
-          <span>${c.phone}</span>
+          <span>${esc(c.phone)}</span>
           <span style="color:var(--color-border-strong)">|</span>
           <span>${c.ints.length} تفاعلات</span>
           <span style="color:var(--color-border-strong)">|</span>
-          <span>آخر تواصل: ${last.date}</span>
-          <span style="display:flex;gap:var(--space-3px);align-items:center;margin-right:var(--space-2)">
+          <span>آخر تواصل: ${esc(last.date)}</span>
+          <span aria-hidden="true" style="display:flex;gap:var(--space-3px);align-items:center;margin-right:var(--space-2)">
             ${channels.map(ch => `<span style="width:6px;height:6px;border-radius:var(--radius-full);background:${chColor(ch)};display:inline-block"></span>`).join('')}
           </span>
         </div>
       </div>
       <span class="badge ${unres > 0 ? 'b-amber' : 'b-green'}">${unres > 0 ? unres + ' غير محلولة' : 'جميعها محلولة'}</span>
-      <svg class="ccard-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg aria-hidden="true" class="ccard-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     ${aiSummaryCard(c)}`;
   }).join('');
@@ -971,19 +1014,43 @@ function updateStats() {
   document.getElementById('cnt-em').textContent = counts.email;
 }
 
+let lastFocused = null;
+function getFocusable(root){
+  return [...root.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el => !el.disabled && el.offsetParent !== null);
+}
+function onModalKeydown(e){
+  if (e.key === 'Escape') { closeReport(); return; }
+  if (e.key === 'Tab') {
+    const f = getFocusable(document.querySelector('.rpanel'));
+    if (!f.length) return;
+    const first = f[0], last = f[f.length-1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+}
+function setRpStatus(msg){ const s = document.getElementById('rp-status'); if (s) s.textContent = msg; }
+
 function openReport(id) {
   curCust = DB.find(c => c.id === id);
   if (!curCust) return;
+  lastFocused = document.activeElement;
   const unres = curCust.ints.filter(i => (i.st || i.status) === 'unresolved').length;
   document.getElementById('rp-av').textContent = curCust.init;
   document.getElementById('rp-name').textContent = curCust.name;
   document.getElementById('rp-meta').textContent = curCust.ints.length + ' تفاعلات، ' + unres + ' غير محلولة';
   const channels = [...new Set(curCust.ints.map(i => i.ch || i.channel))];
   document.getElementById('rp-channels').innerHTML = channels.map(ch =>
-    `<div class="rp-ch"><div class="rp-ch-dot" style="background:${chColor(ch)}"></div>${chLabel(ch)}</div>`
+    `<div class="rp-ch"><div class="rp-ch-dot" aria-hidden="true" style="background:${chColor(ch)}"></div>${esc(chLabel(ch))}</div>`
   ).join('');
-  document.getElementById('rp-body').innerHTML = `<div class="gen-state"><div class="spin"></div><div class="gen-txt">جاري تحليل ملف العميل...</div><div class="gen-steps"><div class="gs" id="gs1"><div class="gs-dot"></div>مراجعة التفاعلات السابقة</div><div class="gs" id="gs2"><div class="gs-dot"></div>تحديد المشكلات المفتوحة</div><div class="gs" id="gs3"><div class="gs-dot"></div>التنبؤ بسبب التواصل الحالي</div><div class="gs" id="gs4"><div class="gs-dot"></div>إعداد التوصيات</div></div></div>`;
-  document.getElementById('backdrop').classList.add('show');
+  document.getElementById('rp-body').innerHTML = `<div class="gen-state" role="status" aria-busy="true"><div class="spin" aria-hidden="true"></div><div class="gen-txt">جاري تحليل ملف العميل...</div><div class="gen-steps" aria-hidden="true"><div class="gs" id="gs1"><div class="gs-dot"></div>مراجعة التفاعلات السابقة</div><div class="gs" id="gs2"><div class="gs-dot"></div>تحديد المشكلات المفتوحة</div><div class="gs" id="gs3"><div class="gs-dot"></div>التنبؤ بسبب التواصل الحالي</div><div class="gs" id="gs4"><div class="gs-dot"></div>إعداد التوصيات</div></div></div>`;
+  const bd = document.getElementById('backdrop');
+  bd.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  const panel = bd.querySelector('.rpanel');
+  panel.focus();
+  document.addEventListener('keydown', onModalKeydown);
+  setRpStatus('جاري تحليل ملف العميل');
   ['gs1','gs2','gs3','gs4'].forEach((id,i) => setTimeout(() => { const el=document.getElementById(id); if(el) el.classList.add('done'); }, 600+i*600));
   if (curCust.report) {
   setTimeout(() => renderSavedReport(curCust), 3200);
@@ -997,42 +1064,43 @@ function renderSavedReport(c) {
   const unresolved = c.ints.filter(i => (i.st||i.status) === 'unresolved');
   document.getElementById('rp-body').innerHTML = `
     <div class="rp-sec">
-      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</div>
-      <div class="rp-txt">${r.sum}</div>
+      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</h3>
+      <div class="rp-txt">${esc(r.sum)}</div>
     </div>
     <div class="rp-sec">
-      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-warning)"></div>المشكلات المفتوحة</div>
-      ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot"></div><span>${i.sum||i.summary}</span></div>`).join('') : '<div style="font-size:var(--text-base);color:var(--color-text-tertiary)">لا توجد مشكلات مفتوحة.</div>'}
+      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-warning)"></div>المشكلات المفتوحة</h3>
+      ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot" aria-hidden="true"></div><span>${esc(i.sum||i.summary)}</span></div>`).join('') : '<div style="font-size:var(--text-base);color:var(--color-text-tertiary)">لا توجد مشكلات مفتوحة.</div>'}
     </div>
     <div class="rp-sec">
-      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-violet)"></div>التنبؤ بسبب التواصل الحالي</div>
-      <div class="rp-txt">${r.pred}</div>
+      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-violet)"></div>التنبؤ بسبب التواصل الحالي</h3>
+      <div class="rp-txt">${esc(r.pred)}</div>
     </div>
     <div class="rp-sec">
-      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>التوصيات المقترحة</div>
-      ${r.sugs.map((s,i) => `<div class="sug-item"><div class="sug-num">${i+1}</div><span>${s}</span></div>`).join('')}
+      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>التوصيات المقترحة</h3>
+      ${r.sugs.map((s,i) => `<div class="sug-item"><div class="sug-num" aria-hidden="true">${i+1}</div><span>${esc(s)}</span></div>`).join('')}
     </div>
     <div class="rp-sec">
-      <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</div>
+      <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</h3>
       <div class="tl">
         ${c.ints.map(it => `
           <div class="tl-item">
             <div class="tl-l">
-              <div class="tl-ico" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
-                <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
+              <div class="tl-ico" aria-hidden="true" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
+                <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
               </div>
               <div class="tl-line"></div>
             </div>
             <div class="tl-c">
-              <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:var(--weight-medium)">${chLabel(it.ch||it.channel)}</span><span>${it.date}</span></div>
-              <div class="tl-txt">${it.sum||it.summary}</div>
+              <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:var(--weight-medium)">${esc(chLabel(it.ch||it.channel))}</span><span>${esc(it.date)}</span></div>
+              <div class="tl-txt">${esc(it.sum||it.summary)}</div>
               <div class="tl-bdg"><span class="badge ${(it.st||it.status)==='unresolved'?'b-amber':'b-green'}">${(it.st||it.status)==='unresolved'?'غير محلولة':'محلولة'}</span></div>
             </div>
           </div>`).join('')}
       </div>
     </div>`;
+  setRpStatus('اكتمل تحليل ملف العميل');
 }
-  
+
 async function renderReport(c) {
   const interactionsText = c.ints.map((i, idx) =>
     `${idx+1}. القناة: ${chLabel(i.ch||i.channel)} | التاريخ: ${i.date} | الحالة: ${(i.st||i.status)==='unresolved'?'غير محلولة':'محلولة'} | الملخص: ${i.sum||i.summary}`
@@ -1092,68 +1160,106 @@ ${interactionsText}
 
     document.getElementById('rp-body').innerHTML = `
       <div class="rp-sec">
-        <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</div>
-        <div class="rp-txt">${sum}</div>
+        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</h3>
+        <div class="rp-txt">${esc(sum)}</div>
       </div>
       <div class="rp-sec">
-        <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-warning)"></div>المشكلات المفتوحة</div>
-        ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot"></div><span>${i.sum||i.summary}</span></div>`).join('') : '<div style="font-size:var(--text-base);color:var(--color-text-tertiary)">' + open + '</div>'}
+        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-warning)"></div>المشكلات المفتوحة</h3>
+        ${unresolved.length ? unresolved.map(i => `<div class="iss-item"><div class="issdot" aria-hidden="true"></div><span>${esc(i.sum||i.summary)}</span></div>`).join('') : '<div style="font-size:var(--text-base);color:var(--color-text-tertiary)">' + esc(open) + '</div>'}
       </div>
       <div class="rp-sec">
-        <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-violet)"></div>التنبؤ بسبب التواصل الحالي</div>
-        <div class="rp-txt">${pred}</div>
+        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-violet)"></div>التنبؤ بسبب التواصل الحالي</h3>
+        <div class="rp-txt">${esc(pred)}</div>
       </div>
       <div class="rp-sec">
-        <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>التوصيات المقترحة</div>
-        ${sugs.map((s,i) => `<div class="sug-item"><div class="sug-num">${i+1}</div><span>${s}</span></div>`).join('')}
+        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>التوصيات المقترحة</h3>
+        ${sugs.map((s,i) => `<div class="sug-item"><div class="sug-num" aria-hidden="true">${i+1}</div><span>${esc(s)}</span></div>`).join('')}
       </div>
       <div class="rp-sec">
-        <div class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</div>
+        <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</h3>
         <div class="tl">
           ${c.ints.map(it => `
             <div class="tl-item">
               <div class="tl-l">
-                <div class="tl-ico" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
-                  <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
+                <div class="tl-ico" aria-hidden="true" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
+                  <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
                 </div>
                 <div class="tl-line"></div>
               </div>
               <div class="tl-c">
-                <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:var(--weight-medium)">${chLabel(it.ch||it.channel)}</span><span>${it.date}</span></div>
-                <div class="tl-txt">${it.sum||it.summary}</div>
+                <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:var(--weight-medium)">${esc(chLabel(it.ch||it.channel))}</span><span>${esc(it.date)}</span></div>
+                <div class="tl-txt">${esc(it.sum||it.summary)}</div>
                 <div class="tl-bdg"><span class="badge ${(it.st||it.status)==='unresolved'?'b-amber':'b-green'}">${(it.st||it.status)==='unresolved'?'غير محلولة':'محلولة'}</span></div>
               </div>
             </div>`).join('')}
         </div>
       </div>`;
+    setRpStatus('اكتمل تحليل ملف العميل');
 await sb.from('customers')
       .update({ report: JSON.stringify({sum, pred, sugs}), report_updated_at: new Date().toISOString() })
       .eq('id', c.id)
   } catch(e) {
-    document.getElementById('rp-body').innerHTML = '<div style="padding:var(--space-10);font-size:var(--text-base);color:var(--color-text-tertiary)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>';
+    document.getElementById('rp-body').innerHTML = '<div role="alert" style="padding:var(--space-10);font-size:var(--text-base);color:var(--color-text-tertiary)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>';
+    setRpStatus('تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.');
   }
 }
 
-function closeReport() { document.getElementById('backdrop').classList.remove('show'); }
+function closeReport() {
+  document.getElementById('backdrop').classList.remove('show');
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', onModalKeydown);
+  if (lastFocused) lastFocused.focus();
+}
 
 function setCh(ch) {
   selCh = ch;
-  document.querySelectorAll('.chb').forEach(b => b.classList.remove('sel'));
-  document.getElementById('chb-'+ch).classList.add('sel');
+  document.querySelectorAll('.chb').forEach(b => {
+    b.classList.remove('sel');
+    b.setAttribute('aria-checked','false');
+    b.tabIndex = -1;
+  });
+  const sel = document.getElementById('chb-'+ch);
+  sel.classList.add('sel');
+  sel.setAttribute('aria-checked','true');
+  sel.tabIndex = 0;
   document.getElementById('email-field').style.display = ch === 'email' ? 'flex' : 'none';
 }
 function setSt(s) {
   selSt = s;
   document.getElementById('st-u').className = 'stbtn' + (s==='unresolved' ? ' sel-u' : '');
   document.getElementById('st-r').className = 'stbtn' + (s==='resolved' ? ' sel-r' : '');
+  const u = document.getElementById('st-u'), r = document.getElementById('st-r');
+  u.setAttribute('aria-checked', s==='unresolved'); u.tabIndex = s==='unresolved' ? 0 : -1;
+  r.setAttribute('aria-checked', s==='resolved');   r.tabIndex = s==='resolved' ? 0 : -1;
 }
+// arrow-key roving for the radiogroups (RTL: ArrowLeft = next, ArrowRight = prev)
+const CH_ORDER = ['phone','whatsapp','branch','twitter','email'];
+const ST_ORDER = ['unresolved','resolved'];
+function rovingKeys(e, order, current, setter, prefix){
+  let i = order.indexOf(current);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') i = (i+1) % order.length;
+  else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') i = (i-1+order.length) % order.length;
+  else return;
+  e.preventDefault();
+  setter(order[i]);
+  document.getElementById(prefix+(prefix==='chb-'?order[i]:(order[i]==='unresolved'?'u':'r'))).focus();
+}
+document.querySelector('[aria-labelledby="ch-grp-lbl"]').addEventListener('keydown', e => rovingKeys(e, CH_ORDER, selCh, setCh, 'chb-'));
+document.querySelector('[aria-labelledby="st-grp-lbl"]').addEventListener('keydown', e => rovingKeys(e, ST_ORDER, selSt, setSt, 'st-'));
 
 async function addInt() {
   const name = document.getElementById('f-name').value.trim()
   const phone = document.getElementById('f-phone').value.trim()
   const summary = document.getElementById('f-summary').value.trim()
   const date = document.getElementById('f-date').value
-  if (!name || !phone || !summary || !date) return
+  const errEl = document.getElementById('f-error')
+  if (!name || !phone || !summary || !date) {
+    errEl.textContent = 'يرجى تعبئة الحقول المطلوبة: الاسم، الهاتف، الملخص، والتاريخ.'
+    errEl.classList.remove('visually-hidden')
+    return
+  }
+  errEl.textContent = ''
+  errEl.classList.add('visually-hidden')
 
   const { data: existingList } = await sb.from('customers')
     .select('*').eq('phone', phone)
@@ -1183,6 +1289,7 @@ async function addInt() {
   
   const tst = document.getElementById('tst')
   tst.classList.add('show')
+  const tt = tst.querySelector('.tst-text'); if (tt) tt.textContent = 'تمت الإضافة بنجاح.'
   setTimeout(() => tst.classList.remove('show'), 2800)
   clearForm()
   loadCustomers()
@@ -1193,7 +1300,7 @@ function updateRecent(name, ch, date) {
   const init = name.slice(0,2);
   const item = document.createElement('div');
   item.className = 'rec-item';
-  item.innerHTML = `<div class="rec-av">${init}</div><div><div class="rec-name">${name}</div><div class="rec-meta">${chLabel(ch)} — ${date}</div></div>`;
+  item.innerHTML = `<div class="rec-av" aria-hidden="true">${esc(init)}</div><div><div class="rec-name">${esc(name)}</div><div class="rec-meta">${esc(chLabel(ch))} — ${esc(date)}</div></div>`;
   el.prepend(item);
   if (el.children.length > 5) el.lastChild.remove();
 }
