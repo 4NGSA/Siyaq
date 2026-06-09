@@ -1124,7 +1124,7 @@ ${interactionsText}
 
   const response = await requestAiReport({
     model: 'claude-sonnet-4-20250514',
-    max_tokens: 600,
+    max_tokens: 800,
     messages: [{ role: 'user', content: prompt }],
   }, signal);
   const report = parseAiReport(response?.content?.[0]?.text);
