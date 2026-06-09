@@ -1,0 +1,6 @@
+.DS_Store
+
+# local agent + scratch working dirs (not product)
+.claude/
+audit-build/
+mockups/
