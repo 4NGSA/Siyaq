@@ -109,6 +109,7 @@ async function addCustomerInteractionFallback(input) {
         name: input.name,
         phone: input.phone,
         init: input.name.slice(0, 2),
+        national_id: input.national_id,
       })
       .select('id')
       .single();
