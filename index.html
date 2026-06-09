@@ -416,6 +416,9 @@ textarea.fi{resize:vertical;min-height:78px}
   display:none;align-items:center;gap:var(--space-4);
 }
 .tst.show{display:flex}
+.tst-err{
+  background:var(--color-danger-subtle);border-color:var(--color-danger);color:var(--color-danger);
+}
 
 .rcard{
   background:var(--color-surface-raised);border:var(--border-hairline) solid var(--color-border);
@@ -796,10 +799,10 @@ textarea.fi{resize:vertical;min-height:78px}
       <!-- AGENT PAGE -->
       <div class="page active" id="page-agent">
         <div class="stats fu fd1" id="stats-row">
-          <div class="scard bl"><div class="scard-n" id="s-tot">3</div><div class="scard-l">إجمالي العملاء</div></div>
-          <div class="scard am"><div class="scard-n" id="s-unres">8</div><div class="scard-l">مشكلات غير محلولة</div></div>
-          <div class="scard gr"><div class="scard-n" id="s-res">4</div><div class="scard-l">محلولة</div></div>
-          <div class="scard re"><div class="scard-n" id="s-int">12</div><div class="scard-l">إجمالي التفاعلات</div></div>
+          <div class="scard bl"><div class="scard-n" id="s-tot">0</div><div class="scard-l">إجمالي العملاء</div></div>
+          <div class="scard am"><div class="scard-n" id="s-unres">0</div><div class="scard-l">مشكلات غير محلولة</div></div>
+          <div class="scard gr"><div class="scard-n" id="s-res">0</div><div class="scard-l">محلولة</div></div>
+          <div class="scard re"><div class="scard-n" id="s-int">0</div><div class="scard-l">إجمالي التفاعلات</div></div>
         </div>
 
         <div class="search-box fu fd2">
@@ -809,7 +812,7 @@ textarea.fi{resize:vertical;min-height:78px}
 
         <div class="list-hdr fu fd3">
           <span class="list-hdr-t">جميع العملاء</span>
-          <span class="list-hdr-m" id="list-cnt">3 سجلات</span>
+          <span class="list-hdr-m" id="list-cnt">0 سجلات</span>
         </div>
         <div class="clist fu fd4" id="clist"></div>
       </div>
@@ -907,6 +910,10 @@ textarea.fi{resize:vertical;min-height:78px}
             <div class="tst" id="tst" role="status" aria-live="polite">
               <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#2DD4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="tst-text">تمت الإضافة بنجاح.</span>
+            </div>
+            <div class="tst tst-err" id="tst-err" role="alert" aria-live="assertive">
+              <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 4v5M8 11.5v.5" stroke="#F56565" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="#F56565" stroke-width="1.4"/></svg>
+              <span class="tst-err-text">تعذر حفظ التفاعل. حاول مرة أخرى.</span>
             </div>
           </div>
 
@@ -1051,6 +1058,30 @@ function chColor(ch){ return CH_COLORS[ch] || '#888'; }
 function chLabel(ch){ return CH_LABELS[ch] || ch; }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+function renderTimeline(c) {
+  return `<div class="tl">
+        ${c.ints.map(it => {
+          const ch = it.ch || it.channel;
+          const col = chColor(ch);
+          const st = it.st || it.status;
+          return `
+          <div class="tl-item">
+            <div class="tl-l">
+              <div class="tl-ico" aria-hidden="true" style="background:${col}18;color:${col}">
+                <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
+              </div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-c">
+              <div class="tl-meta"><span style="color:${col};font-weight:var(--weight-medium)">${esc(chLabel(ch))}</span><span>${esc(it.date)}</span></div>
+              <div class="tl-txt">${esc(it.sum||it.summary)}</div>
+              <div class="tl-bdg"><span class="badge ${st==='unresolved'?'b-amber':'b-green'}">${st==='unresolved'?'غير محلولة':'محلولة'}</span></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+}
+
 function aiSummaryCard(c) {
   if (!c.ints || !c.ints.length) return '';
   const unres = c.ints.filter(i => (i.st||i.status) === 'unresolved').length;
@@ -1086,7 +1117,7 @@ function renderList(list) {
     const last = c.ints[c.ints.length-1];
     const channels = [...new Set(c.ints.map(i => i.ch||i.channel))];
     const cardLbl = esc(`عرض تقرير ${c.name}، ${c.ints.length} تفاعلات${unres>0 ? '، '+unres+' غير محلولة' : ''}`);
-    return `<div class="ccard" role="button" tabindex="0" aria-label="${cardLbl}" onclick="openReport('${esc(c.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openReport('${esc(c.id)}')}">
+    return `<div class="ccard" role="button" tabindex="0" aria-label="${cardLbl}" data-id="${esc(c.id)}">
       <div class="av" aria-hidden="true">${esc(c.init)}</div>
       <div>
         <div class="ci-name">${esc(c.name)}</div>
@@ -1114,12 +1145,6 @@ function normalizeAr(s) {
     .replace(/[ةه]/g, 'ه')
     .replace(/[يى]/g, 'ي')
     .toLowerCase();
-}
-const EN_TO_AR = {a:'ا',b:'ب',t:'ت',th:'ث',j:'ج',h:'ح',kh:'خ',d:'د',dh:'ذ',r:'ر',z:'ز',s:'س',sh:'ش',f:'ف',q:'ق',k:'ك',l:'ل',m:'م',n:'ن',w:'و',y:'ي',e:'ع',gh:'غ',aa:'ا',ee:'ي',oo:'و'};
-function enToAr(s) {
-  let r = s.toLowerCase();
-  for (const [en,ar] of Object.entries(EN_TO_AR)) r = r.split(en).join(ar);
-  return r;
 }
 // Transliterate Arabic to rough Latin for English search
 function arToLatin(s) {
@@ -1206,17 +1231,39 @@ function openReport(id) {
   document.addEventListener('keydown', onModalKeydown);
   setRpStatus('جاري تحليل ملف العميل');
   ['gs1','gs2','gs3','gs4'].forEach((id,i) => setTimeout(() => { const el=document.getElementById(id); if(el) el.classList.add('done'); }, 600+i*600));
-  if (curCust.report) {
-  setTimeout(() => renderSavedReport(curCust), 3200);
-} else {
-  setTimeout(() => renderReport(curCust), 3200);
-}
+
+  // Drive the loading->content swap off the real work (not a fixed timer),
+  // with a minimum display time so the spinner/steps don't flash.
+  const MIN_MS = 1200;
+  const started = performance.now();
+  const target = curCust;
+  const token = (openReport._token = (openReport._token || 0) + 1);
+  const work = target.report
+    ? Promise.resolve().then(() => renderSavedReport(target))
+    : renderReport(target); // async; both paths resolve to { html, status }
+  work
+    .then(res => {
+      const wait = Math.max(0, MIN_MS - (performance.now() - started));
+      return new Promise(done => setTimeout(() => done(res), wait));
+    })
+    .then(res => {
+      // bail if a newer openReport (or a close) superseded this render
+      if (openReport._token !== token) return;
+      if (!res) return;
+      document.getElementById('rp-body').innerHTML = res.html;
+      setRpStatus(res.status);
+    })
+    .catch(() => {
+      if (openReport._token !== token) return;
+      document.getElementById('rp-body').innerHTML = '<div role="alert" style="padding:var(--space-10);font-size:var(--text-base);color:var(--color-text-tertiary)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>';
+      setRpStatus('تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.');
+    });
 }
 
 function renderSavedReport(c) {
   const r = JSON.parse(c.report);
   const unresolved = c.ints.filter(i => (i.st||i.status) === 'unresolved');
-  document.getElementById('rp-body').innerHTML = `
+  const html = `
     <div class="rp-sec">
       <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</h3>
       <div class="rp-txt">${esc(r.sum)}</div>
@@ -1235,24 +1282,9 @@ function renderSavedReport(c) {
     </div>
     <div class="rp-sec">
       <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</h3>
-      <div class="tl">
-        ${c.ints.map(it => `
-          <div class="tl-item">
-            <div class="tl-l">
-              <div class="tl-ico" aria-hidden="true" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
-                <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
-              </div>
-              <div class="tl-line"></div>
-            </div>
-            <div class="tl-c">
-              <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:var(--weight-medium)">${esc(chLabel(it.ch||it.channel))}</span><span>${esc(it.date)}</span></div>
-              <div class="tl-txt">${esc(it.sum||it.summary)}</div>
-              <div class="tl-bdg"><span class="badge ${(it.st||it.status)==='unresolved'?'b-amber':'b-green'}">${(it.st||it.status)==='unresolved'?'غير محلولة':'محلولة'}</span></div>
-            </div>
-          </div>`).join('')}
-      </div>
+      ${renderTimeline(c)}
     </div>`;
-  setRpStatus('اكتمل تحليل ملف العميل');
+  return { html, status: 'اكتمل تحليل ملف العميل' };
 }
 
 async function renderReport(c) {
@@ -1294,8 +1326,10 @@ ${interactionsText}
       })
     });
 
+    if (!response.ok) throw new Error('proxy responded ' + response.status);
     const data = await response.json();
-    const text = data.content[0].text;
+    const text = data?.content?.[0]?.text;
+    if (typeof text !== 'string') throw new Error('unexpected proxy response shape');
 
     // parse sections
     const getSection = (label) => {
@@ -1312,7 +1346,7 @@ ${interactionsText}
 
     const unresolved = c.ints.filter(i => (i.st||i.status) === 'unresolved');
 
-    document.getElementById('rp-body').innerHTML = `
+    const html = `
       <div class="rp-sec">
         <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-accent)"></div>ملخص رحلة العميل</h3>
         <div class="rp-txt">${esc(sum)}</div>
@@ -1331,34 +1365,28 @@ ${interactionsText}
       </div>
       <div class="rp-sec">
         <h3 class="rp-sec-lbl"><div class="sdot" style="background:var(--color-text-tertiary)"></div>سجل التفاعلات</h3>
-        <div class="tl">
-          ${c.ints.map(it => `
-            <div class="tl-item">
-              <div class="tl-l">
-                <div class="tl-ico" aria-hidden="true" style="background:${chColor(it.ch||it.channel)}18;color:${chColor(it.ch||it.channel)}">
-                  <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" fill="currentColor"/></svg>
-                </div>
-                <div class="tl-line"></div>
-              </div>
-              <div class="tl-c">
-                <div class="tl-meta"><span style="color:${chColor(it.ch||it.channel)};font-weight:var(--weight-medium)">${esc(chLabel(it.ch||it.channel))}</span><span>${esc(it.date)}</span></div>
-                <div class="tl-txt">${esc(it.sum||it.summary)}</div>
-                <div class="tl-bdg"><span class="badge ${(it.st||it.status)==='unresolved'?'b-amber':'b-green'}">${(it.st||it.status)==='unresolved'?'غير محلولة':'محلولة'}</span></div>
-              </div>
-            </div>`).join('')}
-        </div>
+        ${renderTimeline(c)}
       </div>`;
-    setRpStatus('اكتمل تحليل ملف العميل');
-await sb.from('customers')
-      .update({ report: JSON.stringify({sum, pred, sugs}), report_updated_at: new Date().toISOString() })
-      .eq('id', c.id)
+
+    // best-effort persistence; failure here must not block showing the report
+    try {
+      await sb.from('customers')
+        .update({ report: JSON.stringify({sum, pred, sugs}), report_updated_at: new Date().toISOString() })
+        .eq('id', c.id)
+    } catch(_) { /* non-fatal */ }
+
+    return { html, status: 'اكتمل تحليل ملف العميل' };
   } catch(e) {
-    document.getElementById('rp-body').innerHTML = '<div role="alert" style="padding:var(--space-10);font-size:var(--text-base);color:var(--color-text-tertiary)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>';
-    setRpStatus('تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.');
+    return {
+      html: '<div role="alert" style="padding:var(--space-10);font-size:var(--text-base);color:var(--color-text-tertiary)">تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.</div>',
+      status: 'تعذر تحميل التقرير. تحقق من اتصالك وحاول مجدداً.'
+    };
   }
 }
 
 function closeReport() {
+  // invalidate any in-flight render so a slow fetch can't write into a closed panel
+  openReport._token = (openReport._token || 0) + 1;
   document.getElementById('backdrop').classList.remove('show');
   document.body.style.overflow = '';
   document.removeEventListener('keydown', onModalKeydown);
@@ -1415,42 +1443,81 @@ async function addInt() {
   errEl.textContent = ''
   errEl.classList.add('visually-hidden')
 
-  const { data: existingList } = await sb.from('customers')
-    .select('*').eq('phone', phone)
-
-  let customerId
-  if (existingList && existingList.length > 0) {
-    customerId = existingList[0].id
-  } else {
-    const { data: newCustList } = await sb.from('customers')
-      .insert([{ name, phone, init: name.slice(0,2) }])
-      .select()
-    customerId = newCustList[0].id
+  if (selCh === 'email') {
+    const emailVal = document.getElementById('f-email').value.trim()
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      errEl.textContent = 'يرجى إدخال بريد إلكتروني صحيح.'
+      errEl.classList.remove('visually-hidden')
+      return
+    }
   }
 
-  await sb.from('interactions').insert([{
-    customer_id: customerId,
-    channel: selCh,
-    date,
-    summary,
-    status: selSt,
-    email: selCh === 'email' ? document.getElementById('f-email').value : null
-  }])
+  const submitBtn = document.querySelector('.btn-add')
+  if (submitBtn.disabled) return
+  submitBtn.disabled = true
+  submitBtn.setAttribute('aria-busy', 'true')
 
-  await sb.from('customers')
-    .update({ report: null })
-    .eq('id', customerId)
-  
-  const tst = document.getElementById('tst')
-  tst.classList.add('show')
-  const tt = tst.querySelector('.tst-text'); if (tt) tt.textContent = 'تمت الإضافة بنجاح.'
-  setTimeout(() => tst.classList.remove('show'), 2800)
-  clearForm()
-  loadCustomers()
+  try {
+    const { data: existingList, error: lookupErr } = await sb.from('customers')
+      .select('*').eq('phone', phone)
+    if (lookupErr) throw lookupErr
+
+    let customerId
+    if (existingList && existingList.length > 0) {
+      customerId = existingList[0].id
+    } else {
+      const { data: newCustList, error: insErr } = await sb.from('customers')
+        .insert([{ name, phone, init: name.slice(0,2) }])
+        .select()
+      if (insErr) throw insErr
+      if (!newCustList || !newCustList.length) throw new Error('insert returned no row')
+      customerId = newCustList[0].id
+    }
+
+    const { error: intErr } = await sb.from('interactions').insert([{
+      customer_id: customerId,
+      channel: selCh,
+      date,
+      summary,
+      status: selSt,
+      email: selCh === 'email' ? document.getElementById('f-email').value.trim() : null
+    }])
+    if (intErr) throw intErr
+
+    // best-effort report invalidation; failure here is non-fatal
+    await sb.from('customers')
+      .update({ report: null })
+      .eq('id', customerId)
+
+    const tst = document.getElementById('tst')
+    tst.classList.add('show')
+    const tt = tst.querySelector('.tst-text'); if (tt) tt.textContent = 'تمت الإضافة بنجاح.'
+    setTimeout(() => tst.classList.remove('show'), 2800)
+    updateRecent(name, selCh, date)
+    clearForm()
+    loadCustomers()
+  } catch (e) {
+    showAddError('تعذر حفظ التفاعل. حاول مرة أخرى.')
+  } finally {
+    submitBtn.disabled = false
+    submitBtn.removeAttribute('aria-busy')
+  }
+}
+
+function showAddError(msg) {
+  // hide the success toast if it happens to be visible
+  document.getElementById('tst').classList.remove('show')
+  const te = document.getElementById('tst-err')
+  const t = te.querySelector('.tst-err-text'); if (t) t.textContent = msg
+  te.classList.add('show')
+  setTimeout(() => te.classList.remove('show'), 4000)
 }
 
 function updateRecent(name, ch, date) {
   const el = document.getElementById('rec-list');
+  // drop the static "no recent additions" placeholder on the first real insert
+  const placeholder = el.querySelector(':scope > div:not(.rec-item)');
+  if (placeholder) placeholder.remove();
   const init = name.slice(0,2);
   const item = document.createElement('div');
   item.className = 'rec-item';
@@ -1478,8 +1545,13 @@ function addNote() {
 
             //asks supabase for customers, interactions then links them together and updates the stats with the real data
 async function loadCustomers() {
-  const { data: customers } = await sb.from('customers').select('*')
-  const { data: interactions } = await sb.from('interactions').select('*')
+  const { data: customers, error: cErr } = await sb.from('customers').select('*')
+  const { data: interactions, error: iErr } = await sb.from('interactions').select('*')
+  if (cErr || iErr) {
+    document.getElementById('clist').innerHTML =
+      '<div class="empty">تعذر تحميل البيانات. تحقق من الاتصال.</div>'
+    return
+  }
   DB = (customers || []).map(c => ({
     ...c,
     ints: (interactions || []).filter(i => i.customer_id === c.id)
@@ -1488,7 +1560,24 @@ async function loadCustomers() {
   renderList(DB);
 }
 
-document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+// open a customer's report via event delegation (keeps customer ids out of any inline-handler JS context)
+(function () {
+  const clist = document.getElementById('clist');
+  clist.addEventListener('click', e => {
+    const card = e.target.closest('.ccard');
+    if (card && card.dataset.id) openReport(card.dataset.id);
+  });
+  clist.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.ccard');
+    if (card && card.dataset.id) { e.preventDefault(); openReport(card.dataset.id); }
+  });
+})();
+
+const today = new Date().toISOString().split('T')[0];
+const fDate = document.getElementById('f-date');
+fDate.value = today;
+fDate.max = today;
 loadCustomers();
   
 </script>
