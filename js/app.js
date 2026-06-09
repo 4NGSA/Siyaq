@@ -1491,6 +1491,7 @@ function snapshotInteractionForm() {
   return {
     name: byId('f-name').value.trim(),
     phone: byId('f-phone').value.trim(),
+    national_id: byId('f-national-id')?.value.trim() || null,
     summary: byId('f-summary').value.trim(),
     date: byId('f-date').value,
     channel: selectedChannel,
@@ -1498,7 +1499,7 @@ function snapshotInteractionForm() {
     email: selectedChannel === 'email' ? byId('f-email').value.trim() : null,
   };
 }
-
+  
 function validateInteractionForm(values) {
   if (!values.name) return ['يرجى إدخال اسم العميل.', byId('f-name')];
   if (!values.phone) return ['يرجى إدخال الهاتف أو المعرف.', byId('f-phone')];
