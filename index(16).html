@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0F111A">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://nidysxhagcfzjfdodsux.supabase.co wss://nidysxhagcfzjfdodsux.supabase.co https://siyaq-proxy.h-alqahtaniofficial.workers.dev https://siyaq-server.onrender.com wss://siyaq-server.onrender.com; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+  <title>سياق</title>
+
+  <!-- Warm the connection to the data origin before the first query fires -->
+  <link rel="preconnect" href="https://nidysxhagcfzjfdodsux.supabase.co" crossorigin>
+
+  <!-- Preload the weights used above the fold so text paints without a swap flash -->
+  <link rel="preload" href="fonts/ThmanyahSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/ThmanyahSans-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/ThmanyahSans-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="js/vendor-supabase.min.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/api.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/call.js"></script>
+</head>
+<body>
+  <div id="cur" aria-hidden="true"></div>
+  <a href="#main-content" class="skip-link">تخطّ إلى المحتوى</a>
+  <h1 class="visually-hidden">سياق - وكيل التحليل</h1>
+  <p id="page-status" class="visually-hidden" role="status" aria-live="polite"></p>
+
+  <div class="shell" id="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="الشريط الجانبي" tabindex="-1">
+      <div class="sb-top">
+        <div class="sb-logo sb-logo-spacious">
+          <svg width="38" height="48" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <defs>
+              <filter id="glow-logo" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+              <linearGradient id="grad1-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#38BDF8" />
+                  <stop offset="100%" stop-color="#1E2236" />
+              </linearGradient>
+              <linearGradient id="grad2-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4F8EF7" />
+                  <stop offset="100%" stop-color="#1E2236" />
+              </linearGradient>
+              <linearGradient id="grad3-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#A78BFA" />
+                  <stop offset="100%" stop-color="#1E2236" />
+              </linearGradient>
+            </defs>
+
+            <path class="s-path" d="M 140 40 C 140 0, 20 0, 20 50 C 20 100, 140 100, 140 150 C 140 200, 20 200, 20 160" fill="none" stroke="url(#grad1-logo)" stroke-width="14" stroke-linecap="round" />
+            <path class="s-path" d="M 115 50 C 115 20, 45 20, 45 60 C 45 100, 115 100, 115 140 C 115 180, 45 180, 45 150" fill="none" stroke="url(#grad2-logo)" stroke-width="14" stroke-linecap="round" />
+            <path class="s-path" d="M 90 60 C 90 40, 70 40, 70 70 C 70 100, 90 100, 90 130 C 90 160, 70 160, 70 140" fill="none" stroke="url(#grad3-logo)" stroke-width="14" stroke-linecap="round" />
+
+            <g class="central-core">
+                <circle cx="80" cy="100" r="14" fill="none" stroke="#38BDF8" class="central-pulse" />
+                <circle cx="80" cy="100" r="10" fill="#ffffff" filter="url(#glow-logo)" />
+                <circle cx="80" cy="100" r="4.5" fill="#4F8EF7" />
+            </g>
+          </svg>
+          <div>
+            <span class="sb-brand-name">سياق</span>
+            <div class="sb-sub">ذكاء تفاعلات العملاء</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sb-nav" aria-label="التنقل الرئيسي">
+        <div class="sb-sec-label">الرئيسية</div>
+        <button type="button" class="nav-btn active" id="nav-agent" aria-current="page">
+          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          وكيل التحليل
+        </button>
+        <button type="button" class="nav-btn" id="nav-add">
+          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+          إضافة للقاعدة
+        </button>
+
+        <div class="sb-sec-label sb-sec-label-spaced">القنوات</div>
+        <div class="sb-channels">
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-phone"></span><span>هاتف</span></div><span class="channel-count" id="cnt-phone">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-whatsapp"></span><span>واتساب</span></div><span class="channel-count" id="cnt-wa">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-branch"></span><span>فرع</span></div><span class="channel-count" id="cnt-br">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-twitter"></span><span>تويتر</span></div><span class="channel-count" id="cnt-tw">0</span></div>
+          <div class="ch-row"><div class="ch-left"><span class="ch-dot ch-dot-email"></span><span>بريد</span></div><span class="channel-count" id="cnt-em">0</span></div>
+        </div>
+      </nav>
+
+      <div class="sb-footer">
+        <div class="sb-kpi"><span class="sb-kpi-l">إجمالي العملاء</span><span class="sb-kpi-v" id="sb-tot">0</span></div>
+        <div class="sb-kpi"><span class="sb-kpi-l">غير محلولة</span><span class="sb-kpi-v sb-kpi-warning" id="sb-unres">0</span></div>
+      </div>
+    </aside>
+    <div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <button type="button" class="hamb" id="hamb" aria-label="القائمة" aria-expanded="false" aria-controls="sidebar">
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12" stroke-linecap="round"/></svg>
+        </button>
+        <span class="topbar-title" id="tb-title">وكيل التحليل</span>
+      </header>
+
+      <main class="content" id="main-content" tabindex="-1">
+        <section class="page active" id="page-agent" aria-labelledby="agent-heading">
+          <h2 class="visually-hidden" id="agent-heading">وكيل التحليل</h2>
+          <div class="kpi fu fd1" id="stats-row">
+            <div class="kpi-hero">
+              <span class="kpi-n" id="s-unres">0</span>
+              <span class="kpi-lab">مشكلة <b>غير محلولة</b></span>
+            </div>
+            <div class="kpi-sub">
+              <span class="kpi-it"><span class="kpi-d kpi-d-violet" aria-hidden="true"></span><b id="s-int">0</b> تفاعل</span>
+              <span class="kpi-it"><span class="kpi-d kpi-d-green" aria-hidden="true"></span><b id="s-res">0</b> محلولة</span>
+              <span class="kpi-it"><span class="kpi-d kpi-d-blue" aria-hidden="true"></span><b id="s-tot">0</b> عملاء</span>
+            </div>
+          </div>
+
+          <div class="search-box fu fd2">
+            <svg class="search-ico" aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input type="search" id="search-in" aria-label="ابحث بالاسم أو رقم الهاتف أو المعرف" placeholder="ابحث بالاسم أو رقم الهاتف أو المعرف..." autocomplete="off">
+          </div>
+
+          <div class="list-hdr fu fd3">
+            <span class="list-hdr-t">جميع العملاء</span>
+            <span class="list-hdr-m" id="list-cnt">0 سجلات</span>
+          </div>
+          <div class="clist fu fd4" id="clist"></div>
+        </section>
+
+        <section class="page" id="page-add" aria-labelledby="add-heading">
+          <div class="add-layout">
+            <div class="fcard fu fd1">
+              <h2 class="fcard-title" id="add-heading">تسجيل تفاعل جديد</h2>
+              <div class="fcard-sub">أضف تفاعل عميل من أي قناة إلى قاعدة البيانات.</div>
+
+              <div class="fg">
+                <label class="fl" for="f-name">اسم العميل</label>
+                <input class="fi fi-hero" type="text" id="f-name" name="customer-name" placeholder="اسم العميل" autocomplete="name" dir="rtl" required >
+              </div>
+              <div class="fg">
+                <label class="fl" for="f-phone">الهاتف / المعرف</label>
+                <input class="fi" type="text" id="f-phone" name="customer-phone" placeholder="رقم جوال العميل" autocomplete="tel" inputmode="tel" dir="rtl" required>
+              </div>
+              <div class="fg">
+                <label class="fl">الهوية الوطنية / الإقامة</label>
+                <input class="fi" type="text" id="f-national-id" placeholder="1234567890" dir="rtl"/>
+              </div>
+
+              <div class="fg" role="radiogroup" aria-labelledby="ch-grp-lbl">
+                <span class="fl" id="ch-grp-lbl">القناة</span>
+                <div class="ch-grid">
+                  <button type="button" class="chb sel" id="chb-phone" role="radio" aria-checked="true" tabindex="0"><span class="chb-ico chb-ico-phone"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 3.5A1.5 1.5 0 014.5 2h1a1.5 1.5 0 011.5 1.5v1A1.5 1.5 0 015.5 6H5a7 7 0 005.5 5.5v-.5A1.5 1.5 0 0112 9.5h1A1.5 1.5 0 0114.5 11v1A1.5 1.5 0 0113 13.5C7.201 13.5 2.5 8.799 2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="chb-lbl">هاتف</span></button>
+                  <button type="button" class="chb" id="chb-whatsapp" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-whatsapp"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 8.5s.5 1.5 2.5 1.5 2.5-1.5 2.5-1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="chb-lbl">واتساب</span></button>
+                  <button type="button" class="chb" id="chb-branch" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-branch"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 13.5V6.5l4.5-4 4.5 4v7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="9.5" width="4" height="4" rx=".5" stroke="currentColor" stroke-width="1.3"/></svg></span><span class="chb-lbl">فرع</span></button>
+                  <button type="button" class="chb" id="chb-twitter" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-twitter"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5L6.5 8l-4-5.5h3l2.5 3.5 3-3.5h2.5L9.5 7.5 14 13H11l-2.5-3.5L5.5 13H2.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg></span><span class="chb-lbl">تويتر</span></button>
+                  <button type="button" class="chb" id="chb-email" role="radio" aria-checked="false" tabindex="-1"><span class="chb-ico chb-ico-email"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 4.5l5.5 4 5.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span><span class="chb-lbl">بريد</span></button>
+                </div>
+              </div>
+
+              <div class="fg is-hidden" id="email-field">
+                <label class="fl" for="f-email">البريد الإلكتروني</label>
+                <input class="fi" type="email" id="f-email" name="interaction-email" placeholder="example@email.com" autocomplete="email" inputmode="email" dir="ltr">
+              </div>
+
+              <div class="frow">
+                <div class="fg">
+                  <label class="fl" for="f-date">التاريخ</label>
+                  <input class="fi" type="date" id="f-date" name="interaction-date" required>
+                </div>
+                <div class="fg" role="radiogroup" aria-labelledby="st-grp-lbl">
+                  <span class="fl" id="st-grp-lbl">الحالة</span>
+                  <div class="strow">
+                    <button type="button" class="stbtn sel-u" id="st-u" role="radio" aria-checked="true" tabindex="0">غير محلولة</button>
+                    <button type="button" class="stbtn" id="st-r" role="radio" aria-checked="false" tabindex="-1">محلولة</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="fg">
+                <label class="fl" for="f-summary">ملخص</label>
+                <textarea class="fi" id="f-summary" name="interaction-summary" placeholder="وصف مختصر لسبب التواصل وما تم..." required></textarea>
+              </div>
+
+              <button type="button" class="btn-add" data-state="idle">
+                <span class="btn-add-idle">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                  إضافة التفاعل
+                </span>
+                <span class="btn-add-saving" aria-hidden="true">
+                  <span class="btn-spin"></span>
+                  جارٍ الحفظ…
+                </span>
+                <span class="btn-add-done" aria-hidden="true">
+                  <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  تمت الإضافة
+                </span>
+              </button>
+              <p id="f-error" class="visually-hidden" role="alert"></p>
+              <p id="tst" class="visually-hidden" role="status" aria-live="polite"><span class="tst-text"></span></p>
+              <div class="tst-err" id="tst-err" role="alert" aria-live="assertive">
+                <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 4v5M8 11.5v.5" stroke="#F56565" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="#F56565" stroke-width="1.4"/></svg>
+                <span class="tst-err-text">تعذر حفظ التفاعل. حاول مرة أخرى.</span>
+              </div>
+            </div>
+
+            <aside class="rcard fu fd2" aria-labelledby="recent-heading">
+              <h2 class="rcard-title" id="recent-heading">آخر الإضافات</h2>
+              <div class="rec-list" id="rec-list">
+                <div class="empty-placeholder">لا توجد إضافات حديثة.</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="backdrop" id="backdrop">
+    <div class="rpanel" role="dialog" aria-modal="true" aria-labelledby="rp-name" aria-describedby="rp-meta" tabindex="-1">
+      <p id="rp-status" class="visually-hidden" role="status" aria-live="polite"></p>
+      <div class="rp-hdr">
+        <div class="rp-top">
+          <div class="rp-cust">
+            <div class="rp-av" id="rp-av" aria-hidden="true">AZ</div>
+            <div>
+              <h2 class="rp-name" id="rp-name">أحمد الزهراني</h2>
+              <div class="rp-meta" id="rp-meta">4 تفاعلات</div>
+            </div>
+          </div>
+          <button type="button" class="rp-x" aria-label="إغلاق التقرير">
+            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="rp-channels" id="rp-channels"></div>
+      </div>
+
+      <div class="rp-body" id="rp-body">
+        <div class="gen-state" role="status" aria-busy="true" aria-label="جاري تحليل ملف العميل">
+          <div class="spin" aria-hidden="true"></div>
+          <div class="gen-txt">جاري تحليل ملف العميل...</div>
+        </div>
+      </div>
+
+      <div class="rp-ftr">
+        <button type="button" class="btn-note">
+          <svg aria-hidden="true" width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          إضافة تفاعل جديد
+        </button>
+        <button type="button" class="btn-cls">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Live Call Panel ─────────────────────────────────────────────────── -->
+  <div id="call-panel" role="region" aria-label="لوحة المكالمة المباشرة">
+    <div class="cp-hdr">
+      <div class="cp-hdr-right">
+        <span id="cp-dot" class="cp-dot cp-dot-idle"></span>
+        <span id="cp-status" class="cp-status-txt">جارٍ الاتصال…</span>
+      </div>
+      <div class="cp-hdr-left">
+        <span id="cp-caller-id" class="cp-caller"></span>
+        <button type="button" id="cp-close" class="cp-close-btn" aria-label="إغلاق لوحة المكالمة">
+          <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="cp-customer" class="cp-customer"></div>
+
+    <div id="cp-transcript" class="cp-transcript" aria-live="polite" aria-label="النص المباشر"></div>
+  </div>
+
+</body>
+</html>
+
