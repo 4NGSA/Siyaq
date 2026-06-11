@@ -1,6 +1,5 @@
 (function initSiyaqCall() {
-  const WS_URL = 'wss://siyaq-server.onrender.com/ws/browser';
-
+  const WS_URL = 'wss://siyaq-thhr.onrender.com/ws/browser';
   let ws            = null;
   let reconnectTimer = null;
 
