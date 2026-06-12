@@ -1302,3 +1302,12 @@ textarea.fi{resize:vertical;min-height:84px;line-height:1.55}
     right: 1rem;
   }
 }
+
+#call-panel.cp-report-open {
+  bottom: auto;
+  top: 1.5rem;
+}
+[dir="rtl"] #call-panel.cp-report-open {
+  right: auto;
+  left: 1.5rem;
+}
