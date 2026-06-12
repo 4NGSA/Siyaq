@@ -1311,3 +1311,11 @@ textarea.fi{resize:vertical;min-height:84px;line-height:1.55}
   right: auto;
   left: 1.5rem;
 }
+
+#splash {
+  transition: opacity .6s ease;
+}
+#splash.splash-out {
+  opacity: 0;
+  pointer-events: none;
+}
