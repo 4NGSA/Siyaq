@@ -55,6 +55,7 @@
         if (window._siyaqOpenReport && msg.customer?.id) {
           window._siyaqOpenReport(String(msg.customer.id));
         }
+        panel()?.classList.add('cp-report-open');
         break;
 
       case 'new_caller':
@@ -73,7 +74,12 @@
       case 'call_ended':
         activeCallSid = null;
         setStatus('انتهت المكالمة', 'ended');
-        setTimeout(hidePanel, 8000);
+        if (window._siyaqLoadCustomers) {
+  window._siyaqLoadCustomers().then(() => {
+    if (window._siyaqRefreshOpenReport) window._siyaqRefreshOpenReport();
+  }).catch(() => {});
+}
+setTimeout(hidePanel, 8000);
         break;
 
       default:
@@ -123,7 +129,7 @@
   function showPanel() { panel()?.classList.add('cp-visible'); }
 
   function hidePanel() {
-    panel()?.classList.remove('cp-visible');
+    panel()?.classList.remove('cp-visible', 'cp-report-open');
     clearCustomer();
     if (callerId()) callerId().textContent = '';
     activeCallSid = null;
