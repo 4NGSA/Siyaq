@@ -45,6 +45,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const desktopQuery = window.matchMedia('(min-width:1025px)');
 
+
 let customers = [];
 let selectedChannel = 'phone';
 let selectedStatus = 'unresolved';
@@ -1689,6 +1690,10 @@ async function initializeApp() {
   window._siyaqOpenReport = openReport;
   window._siyaqGoPage     = goPage;
   window._siyaqSetStatus  = setStatus;
+  window._siyaqLoadCustomers = loadCustomers;
+  window._siyaqRefreshOpenReport = function () {
+  if (currentCustomer) openReport(currentCustomer.id);
+};
 
   try {
     await loadCustomers();
