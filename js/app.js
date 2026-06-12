@@ -1702,6 +1702,19 @@ async function initializeApp() {
   }
 }
 
+function initSplashScreen() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  setTimeout(function() {
+    splash.classList.add('splash-out');
+  }, 1800);
+  splash.addEventListener('transitionend', function(e) {
+    if (e.target === splash && e.propertyName === 'opacity') {
+      splash.remove();
+    }
+  });
+}
+
 async function bootstrap() {
   try {
     await initializeApp();
@@ -1711,8 +1724,12 @@ async function bootstrap() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
+  document.addEventListener('DOMContentLoaded', function() {
+    initSplashScreen();
+    bootstrap();
+  }, { once: true });
 } else {
+  initSplashScreen();
   bootstrap();
 }
 }());
