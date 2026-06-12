@@ -57,16 +57,29 @@
     <div class="splash-sub">ذكاء تفاعلات العملاء</div>
   </div>
   <script>
-    (function(){
-      var s = document.getElementById('splash');
+  (function(){
+    var s = document.getElementById('splash');
+    var shell = document.getElementById('app-shell');
+    if (shell) shell.style.visibility = 'hidden';
+
+    function dismiss() {
       if (!s) return;
-      setTimeout(function(){
-        s.style.transition = 'opacity .6s ease';
-        s.style.opacity = '0';
-        setTimeout(function(){ s.style.display = 'none'; }, 650);
-      }, 1800);
-    }());
-  </script>
+      s.style.transition = 'opacity .6s ease';
+      s.style.opacity = '0';
+      if (shell) {
+        shell.style.visibility = '';
+        shell.style.transition = 'opacity .5s ease';
+        shell.style.opacity = '1';
+      }
+      setTimeout(function(){ s.style.display = 'none'; }, 650);
+    }
+
+    setTimeout(dismiss, 1800);
+    window.addEventListener('load', function() {
+      setTimeout(dismiss, 400);
+    }, { once: true });
+  }());
+  </script>  
 
   <div id="cur" aria-hidden="true"></div>
   <a href="#main-content" class="skip-link">تخطّ إلى المحتوى</a>
